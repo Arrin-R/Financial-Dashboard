@@ -61,7 +61,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         const isReadOnly = urlParams.get('view') === 'readonly';
 
-        // Updated with realistic current baseline market pricing & user fields
         let assets = [
             { id: 'gold', name: 'Gold (XAU/USD)', symbol: 'XAUUSD', price: 4050.00, change: 0.45, invested: 10000, strike: 3950.00, currency: '$' },
             { id: 'spcx', name: 'SpaceX (SPCX)', symbol: 'SPCX', price: 120.00, change: 0.00, invested: 5000, strike: 110.00, currency: '$' },
@@ -83,7 +82,6 @@
                         if (found) {
                             asset.invested = found.invested;
                             asset.strike = found.strike;
-                            // Allow custom live price overrides if saved
                             if (found.price) asset.price = found.price;
                         }
                         return asset;
@@ -144,20 +142,8 @@
                             </div>
                         </div>
                     `;
-                } else {
-                    editableSectionHTML = `
-                        <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800 text-xs text-slate-400">
-                            <div>
-                                <span class="block uppercase text-[10px]">Invested</span>
-                                <span class="text-white font-semibold">$${asset.invested.toLocaleString()}</span>
-                            </div>
-                            <div>
-                                <span class="block uppercase text-[10px]">Strike Price</span>
-                                <span class="text-white font-semibold">${asset.currency}${asset.strike}</span>
-                            </div>
-                        </div>
-                    `;
                 }
+                // When isReadOnly is true, editableSectionHTML stays completely empty, hiding both invested amounts and strike prices.
 
                 const cardHTML = `
                     <div class="bg-cardbg border border-cardborder rounded-2xl p-5 shadow-lg flex flex-col justify-between space-y-4">

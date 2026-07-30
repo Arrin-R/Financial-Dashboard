@@ -71,7 +71,14 @@
             { id: 'liliang', name: 'Henan Liliang Diamond', symbol: '301071.SZ', price: 60.00, change: -0.80, invested: 3000, strike: 55.00, currency: '¥' }
         ];
 
-        let totalDebt = parseFloat(localStorage.getItem('dashboard_debt')) || 15000.00;
+        // Force update / synchronize default debt to 39765 while honoring newer custom user entries
+        let totalDebt = 39765.00;
+        const savedDebt = localStorage.getItem('dashboard_debt');
+        if (savedDebt && savedDebt !== "15000" && savedDebt !== "15000.00") {
+            totalDebt = parseFloat(savedDebt);
+        } else {
+            localStorage.setItem('dashboard_debt', totalDebt);
+        }
 
         function loadSavedPreferences() {
             const saved = localStorage.getItem('dashboard_assets');
@@ -101,7 +108,6 @@
 
         // Fetch Automatic Live Market Data (Only auto-updates Gold/GBP if no custom manual price was saved)
         async function fetchLiveMarketData() {
-            // If user is in read-only mode, respect saved local data strictly and skip live API overwrites
             if (isReadOnly) return;
 
             try {
@@ -123,7 +129,7 @@
                         goldAsset.price = Number(goldData.price.toFixed(2));
                     }
                 }
-                savePreferences(); // Save updated live numbers if on main page
+                savePreferences();
             } catch (err) {
                 console.warn("API ticker warning, retaining current market layout.", err);
             }
@@ -230,11 +236,8 @@
             }
         }
 
-        // 1. Load saved user changes first
         loadSavedPreferences();
-        // 2. Render initial state using local storage data immediately
         renderDashboard();
-        // 3. Optionally check for background updates only if not in read-only mode
         if (!isReadOnly) {
             fetchLiveMarketData();
         }

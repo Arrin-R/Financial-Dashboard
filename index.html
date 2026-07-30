@@ -99,22 +99,22 @@
             renderDashboard();
         }
 
-        // Fetch Automatic Live Market Data (Gold & Forex feeds)
+        // Fetch Automatic Live Market Data (Only auto-updates Gold/GBP if no custom manual price was saved)
         async function fetchLiveMarketData() {
+            // If user is in read-only mode, respect saved local data strictly and skip live API overwrites
+            if (isReadOnly) return;
+
             try {
-                // Fetch live forex data for GBP/USD
                 const res = await fetch('https://open.er-api.com/v6/latest/USD');
                 const data = await res.json();
                 
                 if (data && data.rates && data.rates.GBP) {
                     const gbpAsset = assets.find(a => a.id === 'gbpusd');
-                    // Only auto-update if user hasn't overridden it locally or to keep sync fresh
                     if (gbpAsset) {
                         gbpAsset.price = Number((1 / data.rates.GBP).toFixed(4));
                     }
                 }
 
-                // Fetch real-time spot gold rate via public metals feed
                 const goldRes = await fetch('https://api.gold-api.com/price/XAU');
                 const goldData = await goldRes.json();
                 if (goldData && goldData.price) {
@@ -123,10 +123,10 @@
                         goldAsset.price = Number(goldData.price.toFixed(2));
                     }
                 }
+                savePreferences(); // Save updated live numbers if on main page
             } catch (err) {
                 console.warn("API ticker warning, retaining current market layout.", err);
             }
-            renderDashboard();
         }
 
         function renderDashboard() {
@@ -174,7 +174,6 @@
                         </div>
                     `;
                 }
-                // When isReadOnly is true, editableSectionHTML is blank, hiding strike price, invested amount, and price edit boxes.
 
                 const cardHTML = `
                     <div class="bg-cardbg border border-cardborder rounded-2xl p-5 shadow-lg flex flex-col justify-between space-y-4">
@@ -231,9 +230,14 @@
             }
         }
 
-        // Initialize saved preferences first, then pull automated live updates
+        // 1. Load saved user changes first
         loadSavedPreferences();
-        fetchLiveMarketData();
+        // 2. Render initial state using local storage data immediately
+        renderDashboard();
+        // 3. Optionally check for background updates only if not in read-only mode
+        if (!isReadOnly) {
+            fetchLiveMarketData();
+        }
     </script>
 </body>
 </html>

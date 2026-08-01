@@ -25,41 +25,246 @@
 
     <div class="max-w-7xl mx-auto space-y-6">
         
-        <!-- Header & Portfolio Summary -->
-        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
-            <div>
-                <h1 class="text-2xl font-bold tracking-tight text-white">Portfolio Dashboard</h1>
-                <p id="mode-subtitle" class="text-slate-400 text-sm">Live market tracking with custom strike prices & PnL calculation</p>
+        <!-- Navigation Menu (Editable Page Only) -->
+        <nav id="app-nav" class="flex justify-between items-center bg-cardbg border border-cardborder px-6 py-3 rounded-2xl shadow-lg">
+            <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></span>
+                <span class="text-xs font-mono uppercase tracking-wider text-slate-300">Secure Terminal Active</span>
             </div>
-            
-            <div class="flex flex-wrap gap-4 w-full lg:w-auto items-center">
-                <!-- Total PnL Card -->
-                <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
-                    <span class="text-xs text-slate-400 uppercase tracking-wider block">Total Portfolio PnL</span>
-                    <span id="total-pnl" class="text-xl font-bold tracking-tight">$0.00</span>
-                </div>
-                <!-- Global Invested Amount Card -->
-                <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
-                    <div class="flex justify-between items-center gap-2">
-                        <span class="text-xs text-slate-400 uppercase tracking-wider block">Invested Amount</span>
-                        <button id="edit-invested-btn" onclick="editGlobalInvested()" class="text-xs text-blue-400 hover:text-blue-300 underline cursor-pointer">Edit</button>
-                    </div>
-                    <span id="global-invested-display" class="text-xl font-bold text-sky-400 tracking-tight">$0.00</span>
-                </div>
-                <!-- Debt Owed Card -->
-                <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
-                    <div class="flex justify-between items-center gap-2">
-                        <span class="text-xs text-slate-400 uppercase tracking-wider block">Debt Owed</span>
-                        <button id="edit-debt-btn" onclick="editDebt()" class="text-xs text-blue-400 hover:text-blue-300 underline cursor-pointer">Edit</button>
-                    </div>
-                    <span id="debt-display" class="text-xl font-bold text-amber-400 tracking-tight">$0.00</span>
-                </div>
+            <div class="flex space-x-4">
+                <button onclick="switchView('dashboard')" id="nav-dashboard-btn" class="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition">Dashboard</button>
+                <button onclick="switchView('history')" id="nav-history-btn" class="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Account History</button>
             </div>
-        </header>
+        </nav>
 
-        <!-- Asset Cards Grid -->
-        <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Dynamic Cards will load here -->
+        <!-- DASHBOARD VIEW CONTAINER -->
+        <div id="view-dashboard" class="space-y-6">
+            <!-- Header & Portfolio Summary -->
+            <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight text-white">Portfolio Dashboard</h1>
+                    <p id="mode-subtitle" class="text-slate-400 text-sm">Live market tracking with custom strike prices & PnL calculation</p>
+                </div>
+                
+                <div class="flex flex-wrap gap-4 w-full lg:w-auto items-center">
+                    <!-- Total PnL Card -->
+                    <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
+                        <span class="text-xs text-slate-400 uppercase tracking-wider block">Total Portfolio PnL</span>
+                        <span id="total-pnl" class="text-xl font-bold tracking-tight">$0.00</span>
+                    </div>
+                    <!-- Global Invested Amount Card -->
+                    <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
+                        <div class="flex justify-between items-center gap-2">
+                            <span class="text-xs text-slate-400 uppercase tracking-wider block">Invested Amount</span>
+                            <button id="edit-invested-btn" onclick="editGlobalInvested()" class="text-xs text-blue-400 hover:text-blue-300 underline cursor-pointer">Edit</button>
+                        </div>
+                        <span id="global-invested-display" class="text-xl font-bold text-sky-400 tracking-tight">$0.00</span>
+                    </div>
+                    <!-- Debt Owed Card -->
+                    <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
+                        <div class="flex justify-between items-center gap-2">
+                            <span class="text-xs text-slate-400 uppercase tracking-wider block">Debt Owed</span>
+                            <button id="edit-debt-btn" onclick="editDebt()" class="text-xs text-blue-400 hover:text-blue-300 underline cursor-pointer">Edit</button>
+                        </div>
+                        <span id="debt-display" class="text-xl font-bold text-amber-400 tracking-tight">$0.00</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Asset Cards Grid -->
+            <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic Cards will load here -->
+            </div>
+        </div>
+
+        <!-- ACCOUNT HISTORY VIEW CONTAINER (Official Statement Layout) -->
+        <div id="view-history" class="space-y-6 hidden">
+            <div class="bg-cardbg border border-cardborder rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
+                
+                <!-- Statement Header -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-800 pb-6 gap-4">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h2 class="text-xl font-bold tracking-tight text-white uppercase">Official Account Ledger & Ledger Statement</h2>
+                            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono px-2 py-0.5 rounded-full">VERIFIED AUDIT</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">Comprehensive record of capital deposits, interest schedules, and debt settlements.</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[11px] font-mono text-slate-400 block">STATEMENT GENERATION DATE</span>
+                        <span class="text-sm font-semibold text-slate-200">July 31, 2026</span>
+                    </div>
+                </div>
+
+                <!-- Ledger Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-[11px] font-mono uppercase tracking-wider text-slate-400">
+                                <th class="py-3 px-4">Timestamp / Date</th>
+                                <th class="py-3 px-4">Transaction / Event Description</th>
+                                <th class="py-3 px-4">Channel / Gateway</th>
+                                <th class="py-3 px-4 text-right">Amount</th>
+                                <th class="py-3 px-4 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/60 text-sm">
+                            
+                            <!-- June 11 -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 11, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Capital Deposit Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-blue-500/10 text-blue-400 text-xs px-2 py-0.5 rounded border border-blue-500/20">Credit / USDT</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-emerald-400">+$39,705.00</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Settled</span></td>
+                            </tr>
+
+                            <!-- June 17 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 17, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- June 17 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 17, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-purple-500/10 text-purple-400 text-xs px-2 py-0.5 rounded border border-purple-500/20">VISA</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- June 24 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 24, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- June 24 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 24, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-purple-500/10 text-purple-400 text-xs px-2 py-0.5 rounded border border-purple-500/20">VISA</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- July 1 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 1, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- July 1 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 1, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-amber-500/10 text-amber-400 text-xs px-2 py-0.5 rounded border border-amber-500/20">MasterCard</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- July 8 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 8, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- July 8 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 8, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-purple-500/10 text-purple-400 text-xs px-2 py-0.5 rounded border border-purple-500/20">VISA</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- July 15 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 15, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- July 15 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 15, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded border border-emerald-500/20">USDT</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- July 22 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 22, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- July 22 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 22, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded border border-emerald-500/20">USDT</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- July 29 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 29, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- July 29 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 29, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-purple-500/10 text-purple-400 text-xs px-2 py-0.5 rounded border border-purple-500/20">VISA</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- August 5 Due -->
+                            <tr class="hover:bg-slate-800/30 transition bg-slate-900/40">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">August 5, 2026</td>
+                                <td class="py-3.5 px-4 font-semibold text-amber-400">Interest Payment Due (Upcoming)</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-400 font-mono">Pending Channel</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-sky-400 text-xs font-mono bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">Upcoming</span></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Footer Summary Note -->
+                <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex justify-between items-center text-xs text-slate-400">
+                    <span>End of Current Statement Cycle</span>
+                    <span class="font-mono text-slate-500">REF: LEDGER-2026-X99</span>
+                </div>
+
+            </div>
         </div>
 
     </div>
@@ -68,6 +273,32 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const isReadOnly = urlParams.get('view') === 'readonly';
+
+        // If read-only mode is active, completely hide the navigation menu bar
+        if (isReadOnly) {
+            const navElement = document.getElementById('app-nav');
+            if (navElement) navElement.style.display = 'none';
+        }
+
+        function switchView(viewName) {
+            if (isReadOnly) return;
+            const dashboardView = document.getElementById('view-dashboard');
+            const historyView = document.getElementById('view-history');
+            const dashBtn = document.getElementById('nav-dashboard-btn');
+            const histBtn = document.getElementById('nav-history-btn');
+
+            if (viewName === 'dashboard') {
+                dashboardView.style.display = 'block';
+                historyView.style.display = 'none';
+                dashBtn.className = 'text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition';
+                histBtn.className = 'text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition';
+            } else if (viewName === 'history') {
+                dashboardView.style.display = 'none';
+                historyView.style.display = 'block';
+                histBtn.className = 'text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition';
+                dashBtn.className = 'text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition';
+            }
+        }
 
         // Base asset list structure with default fallback market prices
         let assets = [

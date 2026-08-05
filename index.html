@@ -40,7 +40,7 @@
 
         <!-- DASHBOARD VIEW CONTAINER -->
         <div id="view-dashboard" class="space-y-6">
-            <!-- Header & Portfolio Summary (Un-editable Static View) -->
+            <!-- Header & Portfolio Summary -->
             <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
                 <div>
                     <h1 class="text-2xl font-bold tracking-tight text-white">Portfolio Dashboard</h1>
@@ -53,14 +53,14 @@
                         <span class="text-xs text-slate-400 uppercase tracking-wider block">Total Portfolio PnL</span>
                         <span id="total-pnl" class="text-xl font-bold tracking-tight text-emerald-400">+$14,250.00</span>
                     </div>
-                    <!-- Global Invested Amount Card (Un-editable) -->
+                    <!-- Global Invested Amount Card -->
                     <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
                         <div class="flex justify-between items-center gap-2">
                             <span class="text-xs text-slate-400 uppercase tracking-wider block">Invested Amount</span>
                         </div>
                         <span id="global-invested-display" class="text-xl font-bold text-sky-400 tracking-tight">$39,705.00</span>
                     </div>
-                    <!-- Debt Owed Card (Un-editable) -->
+                    <!-- Debt Owed Card -->
                     <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
                         <div class="flex justify-between items-center gap-2">
                             <span class="text-xs text-slate-400 uppercase tracking-wider block">Debt Owed</span>
@@ -70,17 +70,17 @@
                 </div>
             </header>
 
-            <!-- Asset Cards Grid -->
+            <!-- Asset Cards Grid (Restored Full Asset Tiles) -->
             <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Sample Asset Card 1 -->
+                <!-- Asset 1: Gold -->
                 <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-lg space-y-4">
                     <div class="flex justify-between items-center">
                         <span class="font-bold text-white uppercase tracking-wider text-sm">Gold (XAU/USD)</span>
                         <span class="bg-emerald-500/10 text-emerald-400 text-xs font-mono px-2 py-0.5 rounded border border-emerald-500/20">Active</span>
                     </div>
-                    <div class="flex justify-between text-xs text-slate-400">
-                        <span>Position Size: 2.5 Lot</span>
-                        <span>Entry: $2,410.50</span>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-400">
+                        <div>Invested: <span class="text-white font-mono">$12,000.00</span></div>
+                        <div>Strike: <span class="text-white font-mono">$2,410.50</span></div>
                     </div>
                     <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
                         <span class="text-xs text-slate-400 uppercase">Live PnL</span>
@@ -88,15 +88,31 @@
                     </div>
                 </div>
 
-                <!-- Sample Asset Card 2 -->
+                <!-- Asset 2: SpaceX -->
+                <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-lg space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-white uppercase tracking-wider text-sm">SpaceX Private Equity</span>
+                        <span class="bg-emerald-500/10 text-emerald-400 text-xs font-mono px-2 py-0.5 rounded border border-emerald-500/20">Holding</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-400">
+                        <div>Invested: <span class="text-white font-mono">$10,000.00</span></div>
+                        <div>Valuation: <span class="text-white font-mono">$15,500.00</span></div>
+                    </div>
+                    <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-xs text-slate-400 uppercase">Live PnL</span>
+                        <span class="text-emerald-400 font-mono font-bold">+$5,500.00</span>
+                    </div>
+                </div>
+
+                <!-- Asset 3: S&P 500 Index -->
                 <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-lg space-y-4">
                     <div class="flex justify-between items-center">
                         <span class="font-bold text-white uppercase tracking-wider text-sm">S&P 500 Index</span>
                         <span class="bg-emerald-500/10 text-emerald-400 text-xs font-mono px-2 py-0.5 rounded border border-emerald-500/20">Active</span>
                     </div>
-                    <div class="flex justify-between text-xs text-slate-400">
-                        <span>Position Size: 5.0 Lot</span>
-                        <span>Entry: $5,420.00</span>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-400">
+                        <div>Invested: <span class="text-white font-mono">$8,500.00</span></div>
+                        <div>Strike: <span class="text-white font-mono">$5,420.00</span></div>
                     </div>
                     <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
                         <span class="text-xs text-slate-400 uppercase">Live PnL</span>
@@ -104,32 +120,85 @@
                     </div>
                 </div>
 
-                <!-- Sample Asset Card 3 -->
-                <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-lg space-y-4">
+                <!-- Asset 4: GBP/USD -->
+                    <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-lg space-y-4">
                     <div class="flex justify-between items-center">
-                        <span class="font-bold text-white uppercase tracking-wider text-sm">EUR/USD</span>
+                        <span class="font-bold text-white uppercase tracking-wider text-sm">GBP/USD Forex</span>
                         <span class="bg-blue-500/10 text-blue-400 text-xs font-mono px-2 py-0.5 rounded border border-blue-500/20">Hedged</span>
                     </div>
-                    <div class="flex justify-between text-xs text-slate-400">
-                        <span>Position Size: 1.0 Lot</span>
-                        <span>Entry: $1.0850</span>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-400">
+                        <div>Invested: <span class="text-white font-mono">$4,205.00</span></div>
+                        <div>Strike: <span class="text-white font-mono">$1.2750</span></div>
                     </div>
                     <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
                         <span class="text-xs text-slate-400 uppercase">Live PnL</span>
-                        <span class="text-emerald-400 font-mono font-bold">+$0.00</span>
+                        <span class="text-emerald-400 font-mono font-bold">+$320.00</span>
+                    </div>
+                </div>
+
+                <!-- Asset 5: CATL -->
+                <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-lg space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-white uppercase tracking-wider text-sm">CATL (Energy Storage)</span>
+                        <span class="bg-emerald-500/10 text-emerald-400 text-xs font-mono px-2 py-0.5 rounded border border-emerald-500/20">Active</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-400">
+                        <div>Invested: <span class="text-white font-mono">$3,000.00</span></div>
+                        <div>Strike: <span class="text-white font-mono">¥185.20</span></div>
+                    </div>
+                    <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-xs text-slate-400 uppercase">Live PnL</span>
+                        <span class="text-rose-400 font-mono font-bold">-$450.00</span>
+                    </div>
+                </div>
+
+                <!-- Asset 6: Henan Liliang Diamond -->
+                <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-lg space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-white uppercase tracking-wider text-sm">Henan Liliang Diamond</span>
+                        <span class="bg-emerald-500/10 text-emerald-400 text-xs font-mono px-2 py-0.5 rounded border border-emerald-500/20">Active</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-400">
+                        <div>Invested: <span class="text-white font-mono">$2,000.00</span></div>
+                        <div>Strike: <span class="text-white font-mono">¥6.85</span></div>
+                    </div>
+                    <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-xs text-slate-400 uppercase">Live PnL</span>
+                        <span class="text-emerald-400 font-mono font-bold">+$380.00</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- WITHDRAWAL VIEW CONTAINER -->
+        <!-- WITHDRAWAL VIEW CONTAINER (Fixed Layout with Multi-channel Options) -->
         <div id="view-withdraw" class="space-y-6 hidden">
             <div class="bg-cardbg border border-cardborder rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
                 <div class="border-b border-slate-800 pb-6 space-y-4">
                     <h2 class="text-xl font-bold tracking-tight text-white uppercase">Fund Withdrawal Portal</h2>
                     <p class="text-xs text-slate-400">Select your preferred payout channel and enter destination details to process a withdrawal.</p>
                 </div>
+
                 <form onsubmit="handleWithdrawal(event)" class="space-y-6 max-w-3xl">
+                    <!-- Channel Selector -->
+                    <div class="grid grid-cols-3 gap-4">
+                        <button type="button" onclick="toggleWithdrawFields('bank')" id="btn-chan-bank" 
+                            class="p-4 rounded-xl border border-blue-500 bg-blue-600/10 text-left transition cursor-pointer">
+                            <span class="block text-xs font-mono text-slate-400 uppercase">Channel 01</span>
+                            <span class="font-bold text-sm text-white">Bank Transfer</span>
+                        </button>
+                        <button type="button" onclick="toggleWithdrawFields('card')" id="btn-chan-card" 
+                            class="p-4 rounded-xl border border-slate-700 bg-slate-900/50 text-left transition cursor-pointer">
+                            <span class="block text-xs font-mono text-slate-400 uppercase">Channel 02</span>
+                            <span class="font-bold text-sm text-white">VISA / Mastercard</span>
+                        </button>
+                        <button type="button" onclick="toggleWithdrawFields('crypto')" id="btn-chan-crypto" 
+                            class="p-4 rounded-xl border border-slate-700 bg-slate-900/50 text-left transition cursor-pointer">
+                            <span class="block text-xs font-mono text-slate-400 uppercase">Channel 03</span>
+                            <span class="font-bold text-sm text-white">USDT (TRC20)</span>
+                        </button>
+                    </div>
+
+                    <!-- Amount Input -->
                     <div>
                         <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Withdrawal Amount ($ USD)</label>
                         <div class="relative">
@@ -138,6 +207,55 @@
                                 class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-4 py-3 text-white text-lg font-mono focus:outline-none focus:border-blue-500">
                         </div>
                     </div>
+
+                    <!-- Dynamic Fields: Bank Transfer -->
+                    <div id="fields-bank" class="space-y-4 pt-2">
+                        <div>
+                            <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Bank Name & Branch</label>
+                            <input type="text" placeholder="e.g. Republic Bank / First Citizens" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Account Holder Name</label>
+                                <input type="text" placeholder="Full legal name" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Account Number / IBAN</label>
+                                <input type="text" placeholder="Account number" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Fields: VISA / Mastercard -->
+                    <div id="fields-card" class="space-y-4 pt-2 hidden">
+                        <div>
+                            <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Cardholder Name</label>
+                            <input type="text" placeholder="Name as printed on card" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Card Number</label>
+                            <input type="text" placeholder="XXXX XXXX XXXX XXXX" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Expiry Date</label>
+                                <input type="text" placeholder="MM/YY" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">CVV / CVC</label>
+                                <input type="password" placeholder="123" maxlength="4" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Fields: USDT -->
+                    <div id="fields-crypto" class="space-y-4 pt-2 hidden">
+                        <div>
+                            <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">USDT Wallet Address (TRC20)</label>
+                            <input type="text" placeholder="T..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-xl transition shadow-lg text-sm uppercase tracking-wider cursor-pointer">
                         Submit Withdrawal Request
                     </button>
@@ -145,7 +263,7 @@
             </div>
         </div>
 
-        <!-- ACCOUNT HISTORY VIEW CONTAINER -->
+        <!-- ACCOUNT HISTORY VIEW CONTAINER (Restored Comprehensive Ledger) -->
         <div id="view-history" class="space-y-6 hidden">
             <div class="bg-cardbg border border-cardborder rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-6">
@@ -165,18 +283,39 @@
                         </thead>
                         <tbody class="divide-y divide-slate-800/60 text-sm">
                             <tr class="hover:bg-slate-800/30 transition">
-                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 11, 2026</td>
-                                <td class="py-3.5 px-4 font-medium text-white">Capital Deposit Made</td>
-                                <td class="py-3.5 px-4"><span class="bg-blue-500/10 text-blue-400 text-xs px-2 py-0.5 rounded border border-blue-500/20">Credit</span></td>
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">2026-06-11 14:22</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Initial Capital Deposit</td>
+                                <td class="py-3.5 px-4"><span class="bg-blue-500/10 text-blue-400 text-xs px-2 py-0.5 rounded border border-blue-500/20">Bank Wire</span></td>
                                 <td class="py-3.5 px-4 text-right font-semibold text-emerald-400">+$36,765.00</td>
                                 <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Settled</span></td>
                             </tr>
                             <tr class="hover:bg-slate-800/30 transition">
-                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 11, 2026</td>
-                                <td class="py-3.5 px-4 font-medium text-white">Capital Deposit Made</td>
-                                <td class="py-3.5 px-4"><span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded border border-emerald-500/20">USDT</span></td>
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">2026-06-18 09:15</td>
+                                <td class="py-3.5 px-4 font-medium text-white">USDT Funding Top-up</td>
+                                <td class="py-3.5 px-4"><span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded border border-emerald-500/20">USDT TRC20</span></td>
                                 <td class="py-3.5 px-4 text-right font-semibold text-emerald-400">+$2,940.00</td>
                                 <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Settled</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">2026-06-25 16:40</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Gold (XAU/USD) Profit Realization</td>
+                                <td class="py-3.5 px-4"><span class="bg-purple-500/10 text-purple-400 text-xs px-2 py-0.5 rounded border border-purple-500/20">Trading PnL</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-emerald-400">+$8,450.00</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Settled</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">2026-07-02 11:10</td>
+                                <td class="py-3.5 px-4 font-medium text-white">S&P 500 Quarterly Dividend / Interest</td>
+                                <td class="py-3.5 px-4"><span class="bg-amber-500/10 text-amber-400 text-xs px-2 py-0.5 rounded border border-amber-500/20">Interest</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-emerald-400">+$1,250.00</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Settled</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">2026-07-15 13:00</td>
+                                <td class="py-3.5 px-4 font-medium text-white">External Payout Request</td>
+                                <td class="py-3.5 px-4"><span class="bg-blue-500/10 text-blue-400 text-xs px-2 py-0.5 rounded border border-blue-500/20">Bank Wire</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-rose-400">-$5,000.00</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Completed</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -199,15 +338,26 @@
         function toggleWithdrawFields(channel) {
             ['bank', 'card', 'crypto'].forEach(c => {
                 const el = document.getElementById('fields-' + c);
+                const btn = document.getElementById('btn-chan-' + c);
                 if(el) el.classList.add('hidden');
+                if(btn) {
+                    btn.className = "p-4 rounded-xl border border-slate-700 bg-slate-900/50 text-left transition cursor-pointer";
+                }
             });
             const activeEl = document.getElementById('fields-' + channel);
+            const activeBtn = document.getElementById('btn-chan-' + channel);
             if(activeEl) activeEl.classList.remove('hidden');
+            if(activeBtn) {
+                activeBtn.className = "p-4 rounded-xl border border-blue-500 bg-blue-600/10 text-left transition cursor-pointer";
+            }
         }
 
         function handleWithdrawal(event) {
             event.preventDefault();
-            alert('Withdrawal request submitted successfully.');
+            const amt = document.getElementById('withdraw-amount').value;
+            alert('Withdrawal request of $' + amt + ' submitted successfully.');
+            event.target.reset();
+            toggleWithdrawFields('bank');
         }
     </script>
 </body>

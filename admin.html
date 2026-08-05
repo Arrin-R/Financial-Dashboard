@@ -13,6 +13,29 @@
             }
         }
     </script>
+    
+    <!-- SECURITY GATE SCRIPT -->
+    <style>
+        /* This hides the body of the page by default so nothing flashes on screen before the prompt */
+        body { display: none; }
+    </style>
+    <script>
+        // --- SET YOUR PASSWORD HERE ---
+        const correctPassword = "admin123"; 
+        
+        const enteredPassword = prompt("Restricted Area: Please enter the admin password.");
+
+        if (enteredPassword === correctPassword) {
+            // Password is correct, show the page
+            window.addEventListener('DOMContentLoaded', () => {
+                document.body.style.display = 'block';
+            });
+        } else {
+            // Password is wrong or they hit cancel, kick them back to the main site
+            alert("Access Denied. Returning to the public dashboard.");
+            window.location.href = "index.html";
+        }
+    </script>
 </head>
 <body class="bg-darkbg text-slate-100 min-h-screen p-4 md:p-8 font-sans">
 

@@ -25,26 +25,22 @@
 
     <div class="max-w-7xl mx-auto space-y-6">
         
-        <!-- Navigation Menu -->
+        <!-- Navigation Menu (Editable Page Only) -->
         <nav id="app-nav" class="flex justify-between items-center bg-cardbg border border-cardborder px-6 py-3 rounded-2xl shadow-lg">
             <div class="flex items-center space-x-2">
                 <span class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></span>
-                <span id="terminal-status" class="text-xs font-mono uppercase tracking-wider text-slate-300">Secure Terminal Active</span>
+                <span class="text-xs font-mono uppercase tracking-wider text-slate-300">Secure Terminal Active</span>
             </div>
-            <div class="flex items-center space-x-2 md:space-x-4">
+            <div class="flex space-x-2 md:space-x-4">
                 <button onclick="switchView('dashboard')" id="nav-dashboard-btn" class="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition">Dashboard</button>
                 <button onclick="switchView('withdraw')" id="nav-withdraw-btn" class="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Withdraw</button>
                 <button onclick="switchView('history')" id="nav-history-btn" class="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Account History</button>
-                <!-- Admin Mode Toggle Button -->
-                <button onclick="toggleAdminMode()" id="nav-admin-btn" class="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-400 hover:text-white transition flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                    <span id="admin-btn-text">Admin Edit</span>
-                </button>
             </div>
         </nav>
 
         <!-- DASHBOARD VIEW CONTAINER -->
         <div id="view-dashboard" class="space-y-6">
+            <!-- Header & Portfolio Summary -->
             <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
                 <div>
                     <h1 class="text-2xl font-bold tracking-tight text-white">Portfolio Dashboard</h1>
@@ -52,10 +48,12 @@
                 </div>
                 
                 <div class="flex flex-wrap gap-4 w-full lg:w-auto items-center">
+                    <!-- Total PnL Card -->
                     <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
                         <span class="text-xs text-slate-400 uppercase tracking-wider block">Total Portfolio PnL</span>
                         <span id="total-pnl" class="text-xl font-bold tracking-tight">$0.00</span>
                     </div>
+                    <!-- Global Invested Amount Card -->
                     <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
                         <div class="flex justify-between items-center gap-2">
                             <span class="text-xs text-slate-400 uppercase tracking-wider block">Invested Amount</span>
@@ -63,6 +61,7 @@
                         </div>
                         <span id="global-invested-display" class="text-xl font-bold text-sky-400 tracking-tight">$0.00</span>
                     </div>
+                    <!-- Debt Owed Card -->
                     <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
                         <div class="flex justify-between items-center gap-2">
                             <span class="text-xs text-slate-400 uppercase tracking-wider block">Debt Owed</span>
@@ -73,17 +72,21 @@
                 </div>
             </header>
 
+            <!-- Asset Cards Grid -->
             <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamic Asset Cards -->
+                <!-- Dynamic Cards will load here -->
             </div>
         </div>
 
         <!-- WITHDRAWAL VIEW CONTAINER -->
         <div id="view-withdraw" class="space-y-6 hidden">
             <div class="bg-cardbg border border-cardborder rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
+                
                 <div class="border-b border-slate-800 pb-6 space-y-4">
                     <h2 class="text-xl font-bold tracking-tight text-white uppercase">Fund Withdrawal Portal</h2>
                     <p class="text-xs text-slate-400">Select your preferred payout channel and enter destination details to process a withdrawal.</p>
+                    
+                    <!-- Important Notice Banner -->
                     <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-start space-x-3 text-amber-400">
                         <svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
@@ -94,7 +97,10 @@
                     </div>
                 </div>
 
+                <!-- Withdrawal Form -->
                 <form onsubmit="handleWithdrawal(event)" class="space-y-6 max-w-3xl">
+                    
+                    <!-- Amount Selection -->
                     <div>
                         <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Withdrawal Amount ($ USD)</label>
                         <div class="relative">
@@ -102,11 +108,15 @@
                             <input type="number" id="withdraw-amount" step="any" placeholder="0.00" required
                                 class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-4 py-3 text-white text-lg font-mono focus:outline-none focus:border-blue-500">
                         </div>
+                        <span class="text-[11px] text-slate-400 mt-1 block">Available balance calculated dynamically from portfolio assets.</span>
                     </div>
 
+                    <!-- Channel Selector Radio Cards -->
                     <div>
                         <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-3">Select Payout Method</label>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            
+                            <!-- Bank Transfer Option -->
                             <label class="cursor-pointer">
                                 <input type="radio" name="withdraw_channel" value="bank" class="peer hidden" checked onchange="toggleWithdrawFields('bank')">
                                 <div class="bg-slate-900/60 border border-slate-800 peer-checked:border-blue-500 peer-checked:bg-blue-500/10 p-4 rounded-xl transition space-y-2 h-full flex flex-col justify-between">
@@ -117,6 +127,8 @@
                                     <p class="text-xs text-slate-400">Direct transfer to your personal bank account. 1-3 business days.</p>
                                 </div>
                             </label>
+
+                            <!-- VISA / Mastercard Option -->
                             <label class="cursor-pointer">
                                 <input type="radio" name="withdraw_channel" value="card" class="peer hidden" onchange="toggleWithdrawFields('card')">
                                 <div class="bg-slate-900/60 border border-slate-800 peer-checked:border-blue-500 peer-checked:bg-blue-500/10 p-4 rounded-xl transition space-y-2 h-full flex flex-col justify-between">
@@ -127,6 +139,8 @@
                                     <p class="text-xs text-slate-400">Withdraw directly back to your debit or credit card.</p>
                                 </div>
                             </label>
+
+                            <!-- Crypto Option -->
                             <label class="cursor-pointer">
                                 <input type="radio" name="withdraw_channel" value="crypto" class="peer hidden" onchange="toggleWithdrawFields('crypto')">
                                 <div class="bg-slate-900/60 border border-slate-800 peer-checked:border-blue-500 peer-checked:bg-blue-500/10 p-4 rounded-xl transition space-y-2 h-full flex flex-col justify-between">
@@ -137,6 +151,7 @@
                                     <p class="text-xs text-slate-400">Fast blockchain payout to your external wallet address.</p>
                                 </div>
                             </label>
+
                         </div>
                     </div>
 
@@ -156,6 +171,10 @@
                                 <label class="block text-xs text-slate-400 mb-1">IBAN / Account Number</label>
                                 <input type="text" placeholder="Enter full account number or IBAN" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
                             </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs text-slate-400 mb-1">BIC / SWIFT Code</label>
+                                <input type="text" placeholder="Bank SWIFT/BIC identifier" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                            </div>
                         </div>
                     </div>
 
@@ -166,25 +185,46 @@
                                 <label class="block text-xs text-slate-400 mb-1">Card Number</label>
                                 <input type="text" placeholder="4111 2222 3333 4444" maxlength="19" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
                             </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Expiry Date</label>
+                                <input type="text" placeholder="MM/YY" maxlength="5" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">CVV / Security Code</label>
+                                <input type="password" placeholder="123" maxlength="4" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
+                            </div>
                         </div>
                     </div>
 
                     <div id="fields-crypto" class="space-y-4 bg-slate-900/40 border border-slate-800 p-5 rounded-xl hidden">
                         <h3 class="text-xs font-mono uppercase tracking-wider text-emerald-400">Crypto Wallet Details</h3>
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Destination Wallet Address</label>
-                            <input type="text" placeholder="Paste your USDT wallet address here" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Network Protocol</label>
+                                <select class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                                    <option>USDT - TRC20 (Tron Network)</option>
+                                    <option>USDT - ERC20 (Ethereum Network)</option>
+                                    <option>USDT - BEP20 (Binance Smart Chain)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Destination Wallet Address</label>
+                                <input type="text" placeholder="Paste your USDT wallet address here" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Submit Button -->
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-xl transition shadow-lg text-sm uppercase tracking-wider cursor-pointer">
                         Submit Withdrawal Request
                     </button>
+
                 </form>
+
             </div>
         </div>
 
-        <!-- ACCOUNT HISTORY VIEW CONTAINER (Admin Editable) -->
+        <!-- ACCOUNT HISTORY VIEW CONTAINER (Official Statement Layout) -->
         <div id="view-history" class="space-y-6 hidden">
             <div class="bg-cardbg border border-cardborder rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
                 
@@ -197,20 +237,9 @@
                         </div>
                         <p class="text-xs text-slate-400 mt-1">Comprehensive record of capital deposits, interest schedules, and debt settlements.</p>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <div id="admin-action-bar" class="hidden flex gap-2">
-                            <button onclick="addLedgerRow()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                Add Entry
-                            </button>
-                            <button onclick="saveLedgerChanges()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-3 py-2 rounded-lg transition">
-                                Save Changes
-                            </button>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-[11px] font-mono text-slate-400 block">STATEMENT GENERATION DATE</span>
-                            <span class="text-sm font-semibold text-slate-200">August 5, 2026</span>
-                        </div>
+                    <div class="text-right">
+                        <span class="text-[11px] font-mono text-slate-400 block">STATEMENT GENERATION DATE</span>
+                        <span class="text-sm font-semibold text-slate-200">July 31, 2026</span>
                     </div>
                 </div>
 
@@ -224,13 +253,171 @@
                                 <th class="py-3 px-4">Channel / Gateway</th>
                                 <th class="py-3 px-4 text-right">Amount</th>
                                 <th class="py-3 px-4 text-center">Status</th>
-                                <th id="admin-col-header" class="py-3 px-4 text-center hidden">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="ledger-table-body" class="divide-y divide-slate-800/60 text-sm">
-                            <!-- Populated dynamically via JS -->
+                        <tbody class="divide-y divide-slate-800/60 text-sm">
+                            
+                            <!-- June 11 Credit Deposit -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 11, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Capital Deposit Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-blue-500/10 text-blue-400 text-xs px-2 py-0.5 rounded border border-blue-500/20">Credit</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-emerald-400">+$36,765.00</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Settled</span></td>
+                            </tr>
+
+                            <!-- June 11 USDT Deposit -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 11, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Capital Deposit Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded border border-emerald-500/20">USDT</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-emerald-400">+$2,940.00</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Settled</span></td>
+                            </tr>
+
+                            <!-- June 17 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 17, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- June 17 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 17, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-purple-500/10 text-purple-400 text-xs px-2 py-0.5 rounded border border-purple-500/20">VISA</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- June 24 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 24, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- June 24 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">June 24, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-purple-500/10 text-purple-400 text-xs px-2 py-0.5 rounded border border-purple-500/20">VISA</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- July 1 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 1, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- July 1 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 1, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-amber-500/10 text-amber-400 text-xs px-2 py-0.5 rounded border border-amber-500/20">MasterCard</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- July 8 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 8, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- July 8 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 8, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-purple-500/10 text-purple-400 text-xs px-2 py-0.5 rounded border border-purple-500/20">VISA</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- July 15 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 15, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- July 15 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 15, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded border border-emerald-500/20">USDT</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- July 22 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 22, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- July 22 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 22, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded border border-emerald-500/20">USDT</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- July 29 Due -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 29, 2026</td>
+                                <td class="py-3.5 px-4 text-slate-400">Interest Payment Due</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-500 font-mono">Scheduled</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-amber-400 text-xs font-mono bg-amber-500/10 px-2 py-0.5 rounded">Due</span></td>
+                            </tr>
+
+                            <!-- July 29 Made -->
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">July 29, 2026</td>
+                                <td class="py-3.5 px-4 font-medium text-white">Interest Payment Made</td>
+                                <td class="py-3.5 px-4"><span class="bg-purple-500/10 text-purple-400 text-xs px-2 py-0.5 rounded border border-purple-500/20">VISA</span></td>
+                                <td class="py-3.5 px-4 text-right font-semibold text-white">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-emerald-400 text-xs font-mono bg-emerald-500/10 px-2 py-0.5 rounded">Cleared</span></td>
+                            </tr>
+
+                            <!-- August 5 Due -->
+                            <tr class="hover:bg-slate-800/30 transition bg-slate-900/40">
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">August 5, 2026</td>
+                                <td class="py-3.5 px-4 font-semibold text-amber-400">Interest Payment Due (Upcoming)</td>
+                                <td class="py-3.5 px-4"><span class="text-xs text-slate-400 font-mono">Pending Channel</span></td>
+                                <td class="py-3.5 px-4 text-right font-mono text-amber-400">$1,838.25</td>
+                                <td class="py-3.5 px-4 text-center"><span class="text-sky-400 text-xs font-mono bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">Upcoming</span></td>
+                            </tr>
+
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Footer Summary Note -->
+                <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex justify-between items-center text-xs text-slate-400">
+                    <span>End of Current Statement Cycle</span>
+                    <span class="font-mono text-slate-500">REF: LEDGER-2026-X99</span>
                 </div>
 
             </div>
@@ -238,149 +425,267 @@
 
     </div>
 
-    <!-- Script Logic -->
+    <!-- JavaScript Application Logic -->
     <script>
-        // Initial / Default Ledger Data
-        const defaultLedgerData = [
-            { date: "June 11, 2026", desc: "Capital Deposit Made", channel: "Credit", amount: "+$36,765.00", status: "Settled" },
-            { date: "June 11, 2026", desc: "Capital Deposit Made", channel: "USDT", amount: "+$2,940.00", status: "Settled" },
-            { date: "June 17, 2026", desc: "Interest Payment Due", channel: "Scheduled", amount: "$1,838.25", status: "Due" },
-            { date: "June 17, 2026", desc: "Interest Payment Made", channel: "VISA", amount: "$1,838.25", status: "Cleared" },
-            { date: "June 24, 2026", desc: "Interest Payment Due", channel: "Scheduled", amount: "$1,838.25", status: "Due" },
-            { date: "June 24, 2026", desc: "Interest Payment Made", channel: "VISA", amount: "$1,838.25", status: "Cleared" },
-            { date: "July 1, 2026", desc: "Interest Payment Due", channel: "Scheduled", amount: "$1,838.25", status: "Due" },
-            { date: "July 1, 2026", desc: "Interest Payment Made", channel: "MasterCard", amount: "$1,838.25", status: "Cleared" },
-            { date: "July 8, 2026", desc: "Interest Payment Due", channel: "Scheduled", amount: "$1,838.25", status: "Due" },
-            { date: "July 8, 2026", desc: "Interest Payment Made", channel: "VISA", amount: "$1,838.25", status: "Cleared" },
-            { date: "July 15, 2026", desc: "Interest Payment Due", channel: "Scheduled", amount: "$1,838.25", status: "Due" },
-            { date: "July 15, 2026", desc: "Interest Payment Made", channel: "USDT", amount: "$1,838.25", status: "Cleared" },
-            { date: "July 22, 2026", desc: "Interest Payment Due", channel: "Scheduled", amount: "$1,838.25", status: "Due" },
-            { date: "July 22, 2026", desc: "Interest Payment Made", channel: "USDT", amount: "$1,838.25", status: "Cleared" },
-            { date: "July 29, 2026", desc: "Interest Payment Due", channel: "Scheduled", amount: "$1,838.25", status: "Due" },
-            { date: "July 29, 2026", desc: "Interest Payment Made", channel: "VISA", amount: "$1,838.25", status: "Cleared" },
-            { date: "August 5, 2026", desc: "Interest Payment Due", channel: "Scheduled", amount: "$1,838.25", status: "Due" }
-        ];
+        const urlParams = new URLSearchParams(window.location.search);
+        const isReadOnly = urlParams.get('view') === 'readonly';
 
-        let ledgerData = JSON.parse(localStorage.getItem('custom_ledger_data')) || defaultLedgerData;
-        let isAdminMode = false;
+        // If read-only mode is active, completely hide the navigation menu bar
+        if (isReadOnly) {
+            const navElement = document.getElementById('app-nav');
+            if (navElement) navElement.style.display = 'none';
+        }
 
         function switchView(viewName) {
-            ['dashboard', 'withdraw', 'history'].forEach(v => {
-                document.getElementById(`view-${v}`).classList.add('hidden');
-                document.getElementById(`nav-${v}-btn`).className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition";
-            });
-            document.getElementById(`view-${viewName}`).classList.remove('hidden');
-            document.getElementById(`nav-${viewName}-btn`).className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition";
-            renderLedger();
-        }
-
-        function toggleAdminMode() {
-            isAdminMode = !isAdminMode;
-            const btn = document.getElementById('nav-admin-btn');
-            const txt = document.getElementById('admin-btn-text');
-            const status = document.getElementById('terminal-status');
-            const actionbar = document.getElementById('admin-action-bar');
+            if (isReadOnly) return;
+            const dashboardView = document.getElementById('view-dashboard');
+            const withdrawView = document.getElementById('view-withdraw');
+            const historyView = document.getElementById('view-history');
             
-            if (isAdminMode) {
-                btn.className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-amber-600 text-white transition flex items-center gap-1.5";
-                txt.innerText = "Admin Active";
-                status.innerText = "Admin Editor Mode Enabled";
-                status.className = "text-xs font-mono uppercase tracking-wider text-amber-400";
-                actionbar.classList.remove('hidden');
-            } else {
-                btn.className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-400 hover:text-white transition flex items-center gap-1.5";
-                txt.innerText = "Admin Edit";
-                status.innerText = "Secure Terminal Active";
-                status.className = "text-xs font-mono uppercase tracking-wider text-slate-300";
-                actionbar.classList.add('hidden');
+            const dashBtn = document.getElementById('nav-dashboard-btn');
+            const withdrawBtn = document.getElementById('nav-withdraw-btn');
+            const histBtn = document.getElementById('nav-history-btn');
+
+            // Reset buttons
+            dashBtn.className = 'text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition';
+            withdrawBtn.className = 'text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition';
+            histBtn.className = 'text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition';
+
+            dashboardView.style.display = 'none';
+            withdrawView.style.display = 'none';
+            historyView.style.display = 'none';
+
+            if (viewName === 'dashboard') {
+                dashboardView.style.display = 'block';
+                dashBtn.className = 'text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition';
+            } else if (viewName === 'withdraw') {
+                withdrawView.style.display = 'block';
+                withdrawBtn.className = 'text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition';
+            } else if (viewName === 'history') {
+                historyView.style.display = 'block';
+                histBtn.className = 'text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition';
             }
-            renderLedger();
-        }
-
-        function renderLedger() {
-            const tbody = document.getElementById('ledger-table-body');
-            const adminColHeader = document.getElementById('admin-col-header');
-            tbody.innerHTML = '';
-
-            if (isAdminMode) {
-                adminColHeader.classList.remove('hidden');
-            } else {
-                adminColHeader.classList.add('hidden');
-            }
-
-            ledgerData.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-800/30 transition";
-
-                if (isAdminMode) {
-                    tr.innerHTML = `
-                        <td class="py-2.5 px-4"><input type="text" data-index="${index}" data-field="date" value="${item.date}" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200"></td>
-                        <td class="py-2.5 px-4"><input type="text" data-index="${index}" data-field="desc" value="${item.desc}" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200"></td>
-                        <td class="py-2.5 px-4"><input type="text" data-index="${index}" data-field="channel" value="${item.channel}" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200"></td>
-                        <td class="py-2.5 px-4 text-right"><input type="text" data-index="${index}" data-field="amount" value="${item.amount}" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200 text-right font-mono"></td>
-                        <td class="py-2.5 px-4 text-center"><input type="text" data-index="${index}" data-field="status" value="${item.status}" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200 text-center"></td>
-                        <td class="py-2.5 px-4 text-center">
-                            <button onclick="deleteLedgerRow(${index})" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 p-1.5 rounded transition">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
-                        </td>
-                    `;
-                } else {
-                    tr.innerHTML = `
-                        <td class="py-3.5 px-4 font-mono text-xs text-slate-300">${item.date}</td>
-                        <td class="py-3.5 px-4 font-medium text-white">${item.desc}</td>
-                        <td class="py-3.5 px-4"><span class="bg-slate-800 text-slate-300 text-xs px-2 py-0.5 rounded border border-slate-700">${item.channel}</span></td>
-                        <td class="py-3.5 px-4 text-right font-semibold text-slate-200">${item.amount}</td>
-                        <td class="py-3.5 px-4 text-center"><span class="text-xs font-mono px-2 py-0.5 rounded ${item.status === 'Cleared' || item.status === 'Settled' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'}">${item.status}</span></td>
-                    `;
-                }
-                tbody.appendChild(tr);
-            });
-        }
-
-        function addLedgerRow() {
-            syncInputsToData();
-            ledgerData.push({ date: "August 2026", desc: "New Transaction", channel: "USDT", amount: "$0.00", status: "Due" });
-            renderLedger();
-        }
-
-        function deleteLedgerRow(index) {
-            syncInputsToData();
-            ledgerData.splice(index, 1);
-            renderLedger();
-        }
-
-        function syncInputsToData() {
-            if (!isAdminMode) return;
-            const inputs = document.querySelectorAll('#ledger-table-body input');
-            inputs.forEach(input => {
-                const index = input.getAttribute('data-index');
-                const field = input.getAttribute('data-field');
-                ledgerData[index][field] = input.value;
-            });
-        }
-
-        function saveLedgerChanges() {
-            syncInputsToData();
-            localStorage.setItem('custom_ledger_data', JSON.stringify(ledgerData));
-            alert('Account History ledger successfully updated and saved!');
-            toggleAdminMode();
         }
 
         function toggleWithdrawFields(channel) {
-            ['bank', 'card', 'crypto'].forEach(c => {
-                document.getElementById(`fields-${c}`).classList.add('hidden');
-            });
-            document.getElementById(`fields-${channel}`).classList.remove('hidden');
+            document.getElementById('fields-bank').classList.add('hidden');
+            document.getElementById('fields-card').classList.add('hidden');
+            document.getElementById('fields-crypto').classList.add('hidden');
+
+            if (channel === 'bank') {
+                document.getElementById('fields-bank').classList.remove('hidden');
+            } else if (channel === 'card') {
+                document.getElementById('fields-card').classList.remove('hidden');
+            } else if (channel === 'crypto') {
+                document.getElementById('fields-crypto').classList.remove('hidden');
+            }
         }
 
         function handleWithdrawal(event) {
             event.preventDefault();
-            alert('Withdrawal request submitted successfully.');
+            const amount = document.getElementById('withdraw-amount').value;
+            const checkedChannel = document.querySelector('input[name="withdraw_channel"]:checked').value;
+            alert(`Withdrawal request of $${amount} via ${checkedChannel.toUpperCase()} submitted successfully!`);
+            document.getElementById('withdraw-amount').value = '';
+            switchView('dashboard');
         }
 
-        // Initialize table on load
-        renderLedger();
+        // Base asset list structure with default fallback market prices
+        let assets = [
+            { id: 'gold', name: 'Gold (XAU/USD)', symbol: 'XAUUSD', price: 4084.90, change: 0.45, invested: 10000, strike: 3950.00, currency: '$' },
+            { id: 'spcx', name: 'SpaceX (SPCX)', symbol: 'SPCX', price: 113.48, change: -1.55, invested: 5000, strike: 110.00, currency: '$' },
+            { id: 'sp500', name: 'S&P 500 Index', symbol: 'SPY', price: 550.00, change: 0.12, invested: 8000, strike: 530.00, currency: '$' },
+            { id: 'gbpusd', name: 'GBP/USD', symbol: 'GBPUSD', price: 1.2850, change: -0.05, invested: 4000, strike: 1.2500, currency: '$' },
+            { id: 'catl', name: 'CATL', symbol: '300750.SZ', price: 180.00, change: 1.10, invested: 6000, strike: 170.00, currency: '¥' },
+            { id: 'liliang', name: 'Henan Liliang Diamond', symbol: '301071.SZ', price: 60.00, change: -0.80, invested: 3000, strike: 55.00, currency: '¥' }
+        ];
+
+        // Force update / synchronize default debt
+        let totalDebt = 39765.00;
+        const savedDebt = localStorage.getItem('dashboard_debt');
+        if (savedDebt && savedDebt !== "15000" && savedDebt !== "15000.00") {
+            totalDebt = parseFloat(savedDebt);
+        } else {
+            localStorage.setItem('dashboard_debt', totalDebt);
+        }
+
+        // Global Invested Amount state synchronization
+        let globalInvested = parseFloat(localStorage.getItem('dashboard_global_invested')) || 36000.00;
+
+        function loadSavedPreferences() {
+            const saved = localStorage.getItem('dashboard_assets');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    assets = assets.map(asset => {
+                        const found = parsed.find(p => p.id === asset.id);
+                        if (found) {
+                            asset.invested = found.invested;
+                            asset.strike = found.strike;
+                            if (found.price !== undefined) asset.price = found.price;
+                        }
+                        return asset;
+                    });
+                } catch(e) { console.error(e); }
+            }
+        }
+
+        function savePreferences() {
+            if (isReadOnly) return;
+            const dataToSave = assets.map(a => ({ id: a.id, invested: a.invested, strike: a.strike, price: a.price }));
+            localStorage.setItem('dashboard_assets', JSON.stringify(dataToSave));
+            localStorage.setItem('dashboard_debt', totalDebt);
+            localStorage.setItem('dashboard_global_invested', globalInvested);
+            renderDashboard();
+        }
+
+        // Fetch Automatic Live Market Data
+        async function fetchLiveMarketData() {
+            if (isReadOnly) return;
+
+            try {
+                const res = await fetch('https://open.er-api.com/v6/latest/USD');
+                const data = await res.json();
+                
+                if (data && data.rates && data.rates.GBP) {
+                    const gbpAsset = assets.find(a => a.id === 'gbpusd');
+                    if (gbpAsset) {
+                        gbpAsset.price = Number((1 / data.rates.GBP).toFixed(4));
+                    }
+                }
+
+                const goldRes = await fetch('https://api.gold-api.com/price/XAU');
+                const goldData = await goldRes.json();
+                if (goldData && goldData.price) {
+                    const goldAsset = assets.find(a => a.id === 'gold');
+                    if (goldAsset) {
+                        goldAsset.price = Number(goldData.price.toFixed(2));
+                    }
+                }
+                savePreferences();
+            } catch (err) {
+                console.warn("API ticker warning, retaining current market layout.", err);
+            }
+        }
+
+        function renderDashboard() {
+            const grid = document.getElementById('asset-grid');
+            grid.innerHTML = '';
+
+            if (isReadOnly) {
+                document.getElementById('mode-subtitle').innerText = "Live financial overview (Read-Only Mode)";
+                const editDebtBtn = document.getElementById('edit-debt-btn');
+                if (editDebtBtn) editDebtBtn.style.display = 'none';
+                const editInvestedBtn = document.getElementById('edit-invested-btn');
+                if (editInvestedBtn) editInvestedBtn.style.display = 'none';
+            }
+
+            let grandTotalPnL = 0;
+
+            assets.forEach(asset => {
+                const priceDiff = asset.price - asset.strike;
+                const pnlPercentage = asset.strike > 0 ? (priceDiff / asset.strike) * 100 : 0;
+                const pnlValue = asset.invested * (pnlPercentage / 100);
+                
+                grandTotalPnL += pnlValue;
+
+                const isGreen = pnlValue >= 0;
+                const pnlColorClass = isGreen ? 'text-emerald-400' : 'text-rose-400';
+                const pnlBgClass = isGreen ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-rose-500/10 border-rose-500/20';
+
+                let editableSectionHTML = '';
+                if (!isReadOnly) {
+                    editableSectionHTML = `
+                        <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800">
+                            <div>
+                                <label class="text-[9px] text-slate-400 uppercase tracking-wider block mb-1">Live Price</label>
+                                <input type="number" step="any" value="${asset.price}" onchange="updateAssetField('${asset.id}', 'price', this.value)" 
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="text-[9px] text-slate-400 uppercase tracking-wider block mb-1">Invested ($)</label>
+                                <input type="number" value="${asset.invested}" onchange="updateAssetField('${asset.id}', 'invested', this.value)" 
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="text-[9px] text-slate-400 uppercase tracking-wider block mb-1">Strike</label>
+                                <input type="number" step="any" value="${asset.strike}" onchange="updateAssetField('${asset.id}', 'strike', this.value)" 
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const cardHTML = `
+                    <div class="bg-cardbg border border-cardborder rounded-2xl p-5 shadow-lg flex flex-col justify-between space-y-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h2 class="text-lg font-bold text-white">${asset.name}</h2>
+                                <span class="text-xs text-slate-400 font-mono">${asset.symbol}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm font-semibold text-slate-200 block">${asset.currency}${asset.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 4})}</span>
+                                <span class="text-xs ${asset.change >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${asset.change >= 0 ? '+' : ''}${asset.change.toFixed(2)}%</span>
+                            </div>
+                        </div>
+
+                        <div class="${pnlBgClass} border rounded-xl p-3 flex justify-between items-center">
+                            <div>
+                                <span class="text-xs text-slate-400 block">Asset PnL</span>
+                                <span class="text-base font-bold ${pnlColorClass}">${pnlValue >= 0 ? '+' : ''}$${pnlValue.toFixed(2)}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-slate-400 block">Return</span>
+                                <span class="text-sm font-semibold ${pnlColorClass}">${pnlPercentage >= 0 ? '+' : ''}${pnlPercentage.toFixed(2)}%</span>
+                            </div>
+                        </div>
+
+                        ${editableSectionHTML}
+                    </div>
+                `;
+                grid.innerHTML += cardHTML;
+            });
+
+            const totalPnLEl = document.getElementById('total-pnl');
+            totalPnLEl.innerText = `${grandTotalPnL >= 0 ? '+' : ''}$${grandTotalPnL.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            totalPnLEl.className = `text-xl font-bold tracking-tight ${grandTotalPnL >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+            document.getElementById('global-invested-display').innerText = `$${globalInvested.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('debt-display').innerText = `$${totalDebt.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+
+        function updateAssetField(id, field, value) {
+            if (isReadOnly) return;
+            const asset = assets.find(a => a.id === id);
+            if (asset) {
+                asset[field] = parseFloat(value) || 0;
+                savePreferences();
+            }
+        }
+
+        function editGlobalInvested() {
+            if (isReadOnly) return;
+            const newInvested = prompt("Enter total Invested Amount ($):", globalInvested);
+            if (newInvested !== null && !isNaN(newInvested)) {
+                globalInvested = parseFloat(newInvested);
+                savePreferences();
+            }
+        }
+
+        function editDebt() {
+            if (isReadOnly) return;
+            const newDebt = prompt("Enter total Debt Owed amount ($):", totalDebt);
+            if (newDebt !== null && !isNaN(newDebt)) {
+                totalDebt = parseFloat(newDebt);
+                savePreferences();
+            }
+        }
+
+        loadSavedPreferences();
+        renderDashboard();
+        if (!isReadOnly) {
+            fetchLiveMarketData();
+        }
     </script>
 </body>
 </html>

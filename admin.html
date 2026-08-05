@@ -3,210 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>Admin Dashboard Controller</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: { colors: { darkbg: '#0f172a', cardbg: '#1e293b', cardborder: '#334155' } } }
-        }
-    </script>
-    
-    <!-- SECURITY GATE SCRIPT -->
-    <style> body { display: none; } </style>
-    <script>
-        const correctPassword = "DillionMoney"; 
-        const enteredPassword = prompt("Restricted Area: Please enter the admin password.");
-
-        if (enteredPassword === correctPassword) {
-            window.addEventListener('DOMContentLoaded', () => { document.body.style.display = 'block'; });
-        } else {
-            alert("Access Denied.");
-            window.location.href = "index.html";
-        }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { darkbg: '#0f172a', cardbg: '#1e293b', cardborder: '#334155' } } } }
     </script>
 </head>
 <body class="bg-darkbg text-slate-100 min-h-screen p-4 md:p-8 font-sans">
-
     <div class="max-w-4xl mx-auto space-y-6">
-        
         <header class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl flex justify-between items-center">
             <div>
-                <h1 class="text-2xl font-bold tracking-tight text-white uppercase">Admin Control Panel</h1>
-                <p class="text-slate-400 text-sm mt-1">Manage public dashboard stats and ledger history.</p>
+                <h1 class="text-xl font-bold text-white uppercase tracking-wider">Admin Control Panel</h1>
+                <p class="text-xs text-slate-400 mt-1">Manage live figures reflected on the user portfolio & history statement.</p>
             </div>
-            <a href="index.html" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-semibold transition">Back to Dashboard</a>
+            <button onclick="saveChanges()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider px-5 py-2.5 rounded-xl transition shadow-lg cursor-pointer">
+                Save & Push Updates
+            </button>
         </header>
 
-        <!-- EDIT DASHBOARD STATS -->
-        <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-4">
-            <h2 class="text-sm font-bold tracking-tight text-white uppercase border-b border-slate-700 pb-2">Edit Dashboard Tiles</h2>
-            <form id="edit-stats-form" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Main Stats Config -->
+        <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl space-y-4">
+            <h2 class="text-sm font-mono uppercase tracking-wider text-blue-400">Portfolio Overview Numbers</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">Total Invested</label>
-                    <input type="text" id="s-invested" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500">
+                    <label class="block text-xs text-slate-400 mb-1">Total PnL</label>
+                    <input type="text" id="admin-pnl" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white">
                 </div>
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">Current PnL</label>
-                    <input type="text" id="s-pnl" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500">
+                    <label class="block text-xs text-slate-400 mb-1">Invested Amount</label>
+                    <input type="text" id="admin-invested" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white">
                 </div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Debt Owed</label>
-                    <input type="text" id="s-debt" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500">
+                    <input type="text" id="admin-debt" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white">
                 </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Available to Withdraw</label>
-                    <input type="text" id="s-withdraw" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500">
-                </div>
-                <div class="md:col-span-4 pt-2">
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-lg transition shadow text-sm uppercase">Save Dashboard Stats</button>
-                </div>
-            </form>
+            </div>
         </div>
 
-        <!-- ADD NEW RECORD TO LEDGER -->
-        <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-4">
-            <h2 class="text-sm font-bold tracking-tight text-white uppercase border-b border-slate-700 pb-2">Add Ledger Record</h2>
-            <form id="add-record-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Date</label>
-                    <input type="text" id="r-date" placeholder="August 5, 2026" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Description</label>
-                    <input type="text" id="r-desc" placeholder="Interest Payment" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Amount</label>
-                    <input type="text" id="r-amount" placeholder="$1,838.25" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Gateway Type</label>
-                    <select id="r-gateway" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white">
-                        <option value="Credit|text-blue-400 bg-blue-500/10 border-blue-500/20">Credit (Blue)</option>
-                        <option value="USDT|text-emerald-400 bg-emerald-500/10 border-emerald-500/20">USDT (Green)</option>
-                        <option value="VISA|text-purple-400 bg-purple-500/10 border-purple-500/20">VISA (Purple)</option>
-                        <option value="Scheduled|text-slate-500 border-transparent">Scheduled (Grey)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Amount Color</label>
-                    <select id="r-amount-color" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white">
-                        <option value="text-white">White (Standard)</option>
-                        <option value="text-emerald-400">Green (Positive)</option>
-                        <option value="text-red-400">Red (Negative)</option>
-                        <option value="text-amber-400">Orange (Pending)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Status</label>
-                    <select id="r-status" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white">
-                        <option value="Settled|text-emerald-400 bg-emerald-500/10">Settled (Green)</option>
-                        <option value="Cleared|text-emerald-400 bg-emerald-500/10">Cleared (Green)</option>
-                        <option value="Due|text-amber-400 bg-amber-500/10">Due (Orange)</option>
-                        <option value="Pending|text-blue-400 bg-blue-500/10">Pending (Blue)</option>
-                    </select>
-                </div>
-                <div class="md:col-span-3 pt-2">
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition shadow text-sm uppercase">Add Record</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- CURRENT RECORDS TABLE -->
-        <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl overflow-x-auto">
-            <h2 class="text-sm font-bold tracking-tight text-white uppercase border-b border-slate-700 pb-2 mb-4">Current Ledger Records</h2>
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="border-b border-slate-800 text-[11px] font-mono uppercase text-slate-400">
-                        <th class="py-2 px-4">Date</th>
-                        <th class="py-2 px-4">Description</th>
-                        <th class="py-2 px-4">Amount</th>
-                        <th class="py-2 px-4 text-right">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-table-body" class="divide-y divide-slate-800/60 text-sm"></tbody>
-            </table>
+        <!-- Ledger Manager -->
+        <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl space-y-4">
+            <h2 class="text-sm font-mono uppercase tracking-wider text-amber-400">Add Account History Transaction</h2>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                <input type="text" id="new-date" placeholder="Date (e.g. Aug 5, 2026)" class="bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white">
+                <input type="text" id="new-desc" placeholder="Description" class="bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white">
+                <input type="text" id="new-channel" placeholder="Channel (VISA/USDT)" class="bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white">
+                <input type="text" id="new-amount" placeholder="Amount (+/-$0.00)" class="bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white">
+                <button onclick="addLedgerItem()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg p-2.5 uppercase tracking-wider">Add Row</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- DASHBOARD STATS LOGIC ---
-        function loadAdminStats() {
-            const defaultStats = { invested: "$0.00", pnl: "+$0.00", debt: "$0.00", withdrawable: "$0.00" };
-            let stats = JSON.parse(localStorage.getItem('app_dashboard_stats')) || defaultStats;
-            document.getElementById('s-invested').value = stats.invested;
-            document.getElementById('s-pnl').value = stats.pnl;
-            document.getElementById('s-debt').value = stats.debt;
-            document.getElementById('s-withdraw').value = stats.withdrawable;
-        }
-
-        document.getElementById('edit-stats-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const newStats = {
-                invested: document.getElementById('s-invested').value,
-                pnl: document.getElementById('s-pnl').value,
-                debt: document.getElementById('s-debt').value,
-                withdrawable: document.getElementById('s-withdraw').value
+        function loadAdminData() {
+            const data = JSON.parse(localStorage.getItem('dashboard_state')) || {
+                invested: "$39,705.00",
+                debt: "$14,706.00",
+                totalPnl: "+$4,250.00",
+                assets: [
+                    { name: "Gold (XAU/USD)", type: "Spot Scalp", pnl: "+$2,450.00", status: "Active" },
+                    { name: "USDT Reserves", type: "Liquid Vault", pnl: "+$1,800.00", status: "Secure" }
+                ],
+                ledger: []
             };
-            localStorage.setItem('app_dashboard_stats', JSON.stringify(newStats));
-            alert("Dashboard Stats Updated Successfully!");
-        });
 
-
-        // --- HISTORY LEDGER LOGIC ---
-        function getHistory() { return JSON.parse(localStorage.getItem('app_account_history')) || []; }
-        function saveHistory(data) { localStorage.setItem('app_account_history', JSON.stringify(data)); renderAdminTable(); }
-
-        function renderAdminTable() {
-            const data = getHistory();
-            const tbody = document.getElementById('admin-table-body');
-            tbody.innerHTML = '';
-            data.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-800/30";
-                tr.innerHTML = `
-                    <td class="py-2 px-4 text-xs text-slate-300 font-mono">${item.date}</td>
-                    <td class="py-2 px-4 text-xs text-white">${item.desc}</td>
-                    <td class="py-2 px-4 text-xs font-semibold ${item.amountClass}">${item.amount}</td>
-                    <td class="py-2 px-4 text-right"><button onclick="deleteRecord(${index})" class="text-xs text-red-400 hover:text-red-300 bg-red-500/10 px-3 py-1 rounded transition">Delete</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
+            document.getElementById('admin-pnl').value = data.totalPnl;
+            document.getElementById('admin-invested').value = data.invested;
+            document.getElementById('admin-debt').value = data.debt;
         }
 
-        window.deleteRecord = function(index) {
-            if(confirm("Delete this record?")) {
-                let data = getHistory();
-                data.splice(index, 1);
-                saveHistory(data);
-            }
+        function saveChanges() {
+            let data = JSON.parse(localStorage.getItem('dashboard_state')) || { assets: [], ledger: [] };
+            data.totalPnl = document.getElementById('admin-pnl').value;
+            data.invested = document.getElementById('admin-invested').value;
+            data.debt = document.getElementById('admin-debt').value;
+
+            localStorage.setItem('dashboard_state', JSON.stringify(data));
+            alert("Changes saved and published to user dashboard successfully!");
         }
 
-        document.getElementById('add-record-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const gatewayVal = document.getElementById('r-gateway').value.split('|');
-            const statusVal = document.getElementById('r-status').value.split('|');
-            const newRecord = {
-                id: Date.now(),
-                date: document.getElementById('r-date').value,
-                desc: document.getElementById('r-desc').value,
-                amount: document.getElementById('r-amount').value,
-                gateway: gatewayVal[0], gatewayClass: gatewayVal[1],
-                amountClass: document.getElementById('r-amount-color').value,
-                status: statusVal[0], statusClass: statusVal[1]
+        function addLedgerItem() {
+            let data = JSON.parse(localStorage.getItem('dashboard_state')) || { assets: [], ledger: [] };
+            const newItem = {
+                date: document.getElementById('new-date').value,
+                desc: document.getElementById('new-desc').value,
+                channel: document.getElementById('new-channel').value,
+                amount: document.getElementById('new-amount').value,
+                status: "Cleared"
             };
-            const data = getHistory();
-            data.unshift(newRecord); 
-            saveHistory(data);
-            this.reset();
-        });
+            data.ledger.unshift(newItem);
+            localStorage.setItem('dashboard_state', JSON.stringify(data));
+            alert("New history record added!");
+        }
 
-        // Initialize on load
-        window.addEventListener('DOMContentLoaded', () => {
-            loadAdminStats();
-            renderAdminTable();
-        });
+        window.onload = loadAdminData;
     </script>
 </body>
 </html>

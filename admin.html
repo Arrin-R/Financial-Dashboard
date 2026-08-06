@@ -40,7 +40,7 @@
                     <h1 class="text-2xl font-bold tracking-tight text-white uppercase">Admin Control Panel</h1>
                     <span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-mono px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">RESTRICTED ACCESS</span>
                 </div>
-                <p class="text-slate-400 text-sm mt-1">Manage global user financials, override balances, and push custom ledger entries.</p>
+                <p class="text-slate-400 text-sm mt-1">Manage global user financials, override balances, push custom ledger entries, and manage portfolio assets.</p>
             </div>
             <div class="flex items-center space-x-3">
                 <a href="index.html" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold px-4 py-2 rounded-xl transition uppercase tracking-wider">
@@ -52,7 +52,7 @@
         <!-- Main Grid Controls -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- Column 1 & 2: Global Financial Overrides & Ledger Push -->
+            <!-- Column 1 & 2: Global Financial Overrides, Ledger Push & Asset Management -->
             <div class="lg:col-span-2 space-y-6">
                 
                 <!-- Balance & Debt Control Box -->
@@ -85,6 +85,37 @@
                             Save Core Metrics Override
                         </button>
                     </form>
+                </div>
+
+                <!-- Portfolio Assets Management Box -->
+                <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-6">
+                    <div class="border-b border-slate-800 pb-4 flex justify-between items-center">
+                        <div>
+                            <h2 class="text-lg font-bold text-white uppercase tracking-tight">Portfolio Assets Management</h2>
+                            <p class="text-xs text-slate-400">Add, edit, or delete active market positions and assets.</p>
+                        </div>
+                        <button onclick="openAssetModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-3 rounded-xl transition text-xs uppercase tracking-wider cursor-pointer">
+                            + Add New Asset
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-800 text-[11px] font-mono uppercase tracking-wider text-slate-400">
+                                    <th class="py-3 px-3">Asset Name</th>
+                                    <th class="py-3 px-3">Type</th>
+                                    <th class="py-3 px-3 text-right">Buy Price</th>
+                                    <th class="py-3 px-3 text-right">Current Price</th>
+                                    <th class="py-3 px-3 text-right">P&L</th>
+                                    <th class="py-3 px-3 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-assets-tbody" class="divide-y divide-slate-800/60 text-xs font-mono">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <!-- Add Custom Ledger Entry Box -->
@@ -211,6 +242,50 @@
 
     </div>
 
+    <!-- Modal for Adding / Editing Asset -->
+    <div id="asset-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-cardbg border border-cardborder rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+            <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
+                <h3 id="asset-modal-title" class="text-base font-bold text-white uppercase">Add New Asset Position</h3>
+                <button onclick="closeAssetModal()" class="text-slate-400 hover:text-white font-bold">&times;</button>
+            </div>
+            <form onsubmit="handleAssetFormSubmit(event)" class="space-y-4">
+                <input type="hidden" id="asset-edit-index" value="-1">
+                <div>
+                    <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Asset Name / Pair</label>
+                    <input type="text" id="asset-name" placeholder="e.g. XAU/USD Gold Spot" required
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Asset Type / Category</label>
+                    <input type="text" id="asset-type" placeholder="e.g. Precious Metals / Spot" required
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Buy Price</label>
+                        <input type="text" id="asset-buy" placeholder="2,332.50" required
+                            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Current Price</label>
+                        <input type="text" id="asset-current" placeholder="2,385.20" required
+                            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">P&L ($ or formatted string)</label>
+                    <input type="text" id="asset-pnl" placeholder="+1,317.50" required
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closeAssetModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold px-4 py-2 rounded-xl text-xs uppercase transition cursor-pointer">Cancel</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-xl text-xs uppercase transition cursor-pointer">Save Asset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Admin Runtime Script -->
     <script>
         const defaultData = {
@@ -280,7 +355,32 @@
                 </div>
             `;
 
-            // Populate Admin Manage / Delete Table
+            // Populate Assets Management Table
+            const assetsTbody = document.getElementById('admin-assets-tbody');
+            assetsTbody.innerHTML = '';
+            if (data.assets.length === 0) {
+                assetsTbody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-slate-500">No portfolio assets found.</td></tr>`;
+            } else {
+                data.assets.forEach((asset, index) => {
+                    let isNegative = asset.pnl.startsWith('-');
+                    let pnlClass = isNegative ? 'text-rose-400' : 'text-emerald-400';
+                    assetsTbody.innerHTML += `
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="py-2.5 px-3 text-white font-bold">${asset.name}</td>
+                            <td class="py-2.5 px-3 text-slate-400">${asset.type}</td>
+                            <td class="py-2.5 px-3 text-right text-slate-300">${asset.buyPrice}</td>
+                            <td class="py-2.5 px-3 text-right text-slate-300">${asset.currentPrice}</td>
+                            <td class="py-2.5 px-3 text-right ${pnlClass} font-semibold">${asset.pnl}</td>
+                            <td class="py-2.5 px-3 text-center space-x-2">
+                                <button onclick="editAsset(${index})" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 px-2.5 py-1 rounded transition cursor-pointer text-[10px] uppercase font-bold">Edit</button>
+                                <button onclick="deleteAsset(${index})" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 px-2.5 py-1 rounded transition cursor-pointer text-[10px] uppercase font-bold">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            // Populate Admin Manage / Delete Ledger Table
             const adminTbody = document.getElementById('admin-ledger-tbody');
             adminTbody.innerHTML = '';
             if (data.ledger.length === 0) {
@@ -304,6 +404,71 @@
                         </tr>
                     `;
                 });
+            }
+        }
+
+        // Asset Modal Controls
+        function openAssetModal() {
+            document.getElementById('asset-modal-title').innerText = 'Add New Asset Position';
+            document.getElementById('asset-edit-index').value = '-1';
+            document.getElementById('asset-name').value = '';
+            document.getElementById('asset-type').value = '';
+            document.getElementById('asset-buy').value = '';
+            document.getElementById('asset-current').value = '';
+            document.getElementById('asset-pnl').value = '';
+            document.getElementById('asset-modal').classList.remove('hidden');
+            document.getElementById('asset-modal').classList.add('flex');
+        }
+
+        function closeAssetModal() {
+            document.getElementById('asset-modal').classList.remove('flex');
+            document.getElementById('asset-modal').classList.add('hidden');
+        }
+
+        function editAsset(index) {
+            let data = getAppData();
+            let asset = data.assets[index];
+            document.getElementById('asset-modal-title').innerText = 'Edit Asset Position';
+            document.getElementById('asset-edit-index').value = index;
+            document.getElementById('asset-name').value = asset.name;
+            document.getElementById('asset-type').value = asset.type;
+            document.getElementById('asset-buy').value = asset.buyPrice;
+            document.getElementById('asset-current').value = asset.currentPrice;
+            document.getElementById('asset-pnl').value = asset.pnl;
+            document.getElementById('asset-modal').classList.remove('hidden');
+            document.getElementById('asset-modal').classList.add('flex');
+        }
+
+        function handleAssetFormSubmit(event) {
+            event.preventDefault();
+            let data = getAppData();
+            let editIndex = parseInt(document.getElementById('asset-edit-index').value);
+
+            let newAsset = {
+                name: document.getElementById('asset-name').value,
+                type: document.getElementById('asset-type').value,
+                size: 'Active',
+                buyPrice: document.getElementById('asset-buy').value,
+                currentPrice: document.getElementById('asset-current').value,
+                pnl: document.getElementById('asset-pnl').value
+            };
+
+            if (editIndex === -1) {
+                data.assets.push(newAsset);
+            } else {
+                data.assets[editIndex] = newAsset;
+            }
+
+            saveAppData(data);
+            closeAssetModal();
+            alert('Portfolio assets updated successfully.');
+        }
+
+        function deleteAsset(index) {
+            if (confirm('Are you sure you want to delete this asset position?')) {
+                let data = getAppData();
+                data.assets.splice(index, 1);
+                saveAppData(data);
             }
         }
 
@@ -357,7 +522,6 @@
                 channelClass = 'bg-sky-500/15 text-sky-400 border-sky-500/20';
             }
 
-            // Changed from unshift() to push() so new additions appear at the bottom of the list
             data.ledger.push({
                 date: formattedDate,
                 desc: desc,

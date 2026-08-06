@@ -89,13 +89,14 @@
                     <form onsubmit="handleLedgerPush(event)" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Transaction Date</label>
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Transaction Date (Click to Pick)</label>
                                 <input type="date" id="ledger-date" required
-                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-blue-500 color-scheme-dark">
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-blue-500 cursor-pointer">
                             </div>
                             <div>
                                 <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Payment Channel / Gateway</label>
                                 <select id="ledger-channel" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+                                    <option value="">-- Blank / None --</option>
                                     <option value="Bank Wire">Bank Wire (Sky Blue)</option>
                                     <option value="MasterCard">MasterCard (Amber)</option>
                                     <option value="VISA">VISA (Purple)</option>
@@ -222,9 +223,11 @@
             document.getElementById('admin-invested').value = data.globalInvested;
             document.getElementById('admin-debt').value = data.debtOwed;
 
-            // Set default date input to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('ledger-date').value = today;
+            // Set default date input to today if not already set
+            if (!document.getElementById('ledger-date').value) {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('ledger-date').value = today;
+            }
 
             const summaryBox = document.getElementById('admin-summary-box');
             summaryBox.innerHTML = `
@@ -257,7 +260,6 @@
             let data = getAppData();
 
             let rawDate = document.getElementById('ledger-date').value; // Format: YYYY-MM-DD
-            // Convert YYYY-MM-DD to readable format like "August 05, 2026"
             let formattedDate = rawDate;
             if (rawDate) {
                 const dateObj = new Date(rawDate + 'T00:00:00');
@@ -272,15 +274,24 @@
             let amount = document.getElementById('ledger-amount').value;
             let status = document.getElementById('ledger-status').value;
 
-            let channelClass = 'bg-sky-500/15 text-sky-400 border-sky-500/20';
-            if (channel === 'MasterCard') channelClass = 'bg-amber-500/15 text-amber-400 border-amber-500/20';
-            if (channel === 'VISA') channelClass = 'bg-purple-500/15 text-purple-400 border-purple-500/20';
-            if (channel === 'USDT') channelClass = 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20';
+            // Handle badge styling based on channel selection
+            let channelClass = 'bg-slate-500/15 text-slate-400 border-slate-500/20';
+            let displayChannel = channel ? channel : '—';
+
+            if (channel === 'MasterCard') {
+                channelClass = 'bg-amber-500/15 text-amber-400 border-amber-500/20';
+            } else if (channel === 'VISA') {
+                channelClass = 'bg-purple-500/15 text-purple-400 border-purple-500/20';
+            } else if (channel === 'USDT') {
+                channelClass = 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20';
+            } else if (channel === 'Bank Wire') {
+                channelClass = 'bg-sky-500/15 text-sky-400 border-sky-500/20';
+            }
 
             data.ledger.unshift({
                 date: formattedDate,
                 desc: desc,
-                channel: channel,
+                channel: displayChannel,
                 channelClass: channelClass,
                 amount: amount,
                 status: status
@@ -289,7 +300,11 @@
             saveAppData(data);
             alert('Custom transaction successfully pushed to user ledger.');
             event.target.reset();
-            initAdmin(); // resets date picker back to today & clears custom field
+            
+            // Re-initialize date picker to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('ledger-date').value = today;
+            
             toggleCustomDescField();
         }
 

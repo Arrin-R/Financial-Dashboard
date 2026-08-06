@@ -106,7 +106,6 @@
             if (asset.investedAmount === undefined) asset.investedAmount = 5000;
         });
 
-        // Automatically generate all calendar dates starting from June 11, 2026 through the end of 2027
         function generateDateList() {
             let dates = [];
             let startDate = new Date('2026-06-11');
@@ -122,7 +121,7 @@
         }
 
         const availableDates = generateDateList();
-        const availableGateways = ['Wire', 'VISA', 'MasterCard', 'USDT'];
+        const availablePaymentTypes = ['', 'Wire', 'VISA', 'MasterCard', 'USDT'];
         const availableStatuses = ['Settled', 'Pending'];
 
         function loadAdminForm() {
@@ -166,18 +165,18 @@
                 `;
             });
 
-            // Render Ledger Editors with Complete Scrollable Date Dropdowns
+            // Render Ledger Editors with Payment Type and Blank Option
             const ledgerContainer = document.getElementById('admin-ledger-container');
             ledgerContainer.innerHTML = '';
             currentData.ledger.forEach((item, idx) => {
                 let dateOptions = availableDates.map(d => `<option value="${d}" ${item.date === d ? 'selected' : ''}>${d}</option>`).join('');
-                let gatewayOptions = availableGateways.map(g => `<option value="${g}" ${item.channel === g ? 'selected' : ''}>${g}</option>`).join('');
+                let paymentOptions = availablePaymentTypes.map(pt => `<option value="${pt}" ${item.channel === pt ? 'selected' : ''}>${pt === '' ? '-- Select Payment Type --' : pt}</option>`).join('');
                 let statusOptions = availableStatuses.map(s => `<option value="${s}" ${item.status === s ? 'selected' : ''}>${s}</option>`).join('');
 
                 ledgerContainer.innerHTML += `
                     <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                         <div>
-                            <label class="text-slate-400 block mb-1">Date (Starts June 11, 2026)</label>
+                            <label class="text-slate-400 block mb-1">Date</label>
                             <select id="ledger-date-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
                                 ${dateOptions}
                             </select>
@@ -187,9 +186,9 @@
                             <input type="text" value="${item.desc}" id="ledger-desc-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
                         </div>
                         <div>
-                            <label class="text-slate-400 block mb-1">Gateway</label>
+                            <label class="text-slate-400 block mb-1">Payment Type</label>
                             <select id="ledger-chan-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-semibold">
-                                ${gatewayOptions}
+                                ${paymentOptions}
                             </select>
                         </div>
                         <div>
@@ -244,7 +243,7 @@
         }
 
         function addLedgerRow() {
-            currentData.ledger.push({ date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'Wire', amount: '$0.00', status: 'Pending' });
+            currentData.ledger.push({ date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: '', amount: '$0.00', status: 'Pending' });
             loadAdminForm();
         }
 

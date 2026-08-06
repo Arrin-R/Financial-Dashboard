@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard & Ledger Management</title>
+    <title>User Dashboard & Portfolio</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -20,284 +20,122 @@
             }
         }
     </script>
-    <style>
-        /* Force calendar picker indicator to be clearly visible and clickable */
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
-            padding: 4px;
-        }
-    </style>
 </head>
 <body class="bg-darkbg text-slate-100 min-h-screen p-4 md:p-8 font-sans">
 
     <div class="max-w-7xl mx-auto space-y-6">
         
-        <!-- Header -->
+        <!-- Header / Nav -->
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
             <div>
-                <div class="flex items-center space-x-2">
-                    <h1 class="text-2xl font-bold tracking-tight text-white uppercase">Admin Control Panel</h1>
-                    <span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-mono px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">RESTRICTED ACCESS</span>
-                </div>
-                <p class="text-slate-400 text-sm mt-1">Manage global user financials, override balances, push custom ledger entries, and manage portfolio assets.</p>
+                <h1 class="text-2xl font-bold tracking-tight text-white uppercase">User Portfolio Dashboard</h1>
+                <p class="text-slate-400 text-sm mt-1">Live overview of your assets, invested capital, and transaction ledger.</p>
             </div>
             <div class="flex items-center space-x-3">
-                <a href="index.html" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold px-4 py-2 rounded-xl transition uppercase tracking-wider">
-                    View Live User App &rarr;
+                <a href="admin.html" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold px-4 py-2 rounded-xl transition uppercase tracking-wider">
+                    Admin Panel &rarr;
                 </a>
             </div>
         </header>
 
-        <!-- Main Grid Controls -->
+        <!-- Top Metrics Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl space-y-2">
+                <span class="text-xs font-mono uppercase tracking-wider text-slate-400">Total Invested Amount</span>
+                <div id="stat-invested" class="text-3xl font-bold font-mono text-white">$0.00</div>
+            </div>
+            <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl space-y-2">
+                <span class="text-xs font-mono uppercase tracking-wider text-slate-400">Total Debt Owed</span>
+                <div id="stat-debt" class="text-3xl font-bold font-mono text-rose-400">$0.00</div>
+            </div>
+        </div>
+
+        <!-- Main Content Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- Column 1 & 2: Global Financial Overrides, Ledger Push & Asset Management -->
+            <!-- Column 1 & 2: Active Assets & Portfolio Table -->
             <div class="lg:col-span-2 space-y-6">
-                
-                <!-- Balance & Debt Control Box -->
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-6">
+                <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-4">
                     <div class="border-b border-slate-800 pb-4">
-                        <h2 class="text-lg font-bold text-white uppercase tracking-tight">Global Portfolio Core Overrides</h2>
-                        <p class="text-xs text-slate-400">Modify the master user metrics shown on the frontend dashboard.</p>
+                        <h2 class="text-lg font-bold text-white uppercase tracking-tight">Active Portfolio Assets</h2>
+                        <p class="text-xs text-slate-400">Your currently managed market positions and holdings.</p>
                     </div>
-
-                    <form onsubmit="handleCoreUpdate(event)" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Global Invested Amount ($)</label>
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 font-bold">$</span>
-                                    <input type="number" id="admin-invested" step="any" required
-                                        class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-7 pr-4 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Debt Owed ($)</label>
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 font-bold">$</span>
-                                    <input type="number" id="admin-debt" step="any" required
-                                        class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-7 pr-4 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
-                                </div>
-                            </div>
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl transition text-xs uppercase tracking-wider cursor-pointer">
-                            Save Core Metrics Override
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Portfolio Assets Management Box -->
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-6">
-                    <div class="border-b border-slate-800 pb-4 flex justify-between items-center">
-                        <div>
-                            <h2 class="text-lg font-bold text-white uppercase tracking-tight">Portfolio Assets Management</h2>
-                            <p class="text-xs text-slate-400">Add, edit, or delete active market positions and assets.</p>
-                        </div>
-                        <button onclick="openAssetModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-3 rounded-xl transition text-xs uppercase tracking-wider cursor-pointer">
-                            + Add New Asset
-                        </button>
-                    </div>
-
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="border-b border-slate-800 text-[11px] font-mono uppercase tracking-wider text-slate-400">
                                     <th class="py-3 px-3">Asset Name</th>
                                     <th class="py-3 px-3">Type</th>
-                                    <th class="py-3 px-3 text-right">Buy Price</th>
-                                    <th class="py-3 px-3 text-right">Current Price</th>
                                     <th class="py-3 px-3 text-right">P&L</th>
-                                    <th class="py-3 px-3 text-center">Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-assets-tbody" class="divide-y divide-slate-800/60 text-xs font-mono">
+                            <tbody id="user-assets-tbody" class="divide-y divide-slate-800/60 text-xs font-mono">
                                 <!-- Populated dynamically -->
                             </tbody>
                         </table>
                     </div>
                 </div>
-
-                <!-- Add Custom Ledger Entry Box -->
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-6">
-                    <div class="border-b border-slate-800 pb-4">
-                        <h2 class="text-lg font-bold text-white uppercase tracking-tight">Push Custom Account History Entry</h2>
-                        <p class="text-xs text-slate-400">Add a verified transaction record directly to the user's ledger timeline.</p>
-                    </div>
-
-                    <form onsubmit="handleLedgerPush(event)" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Transaction Date (Click to Pick)</label>
-                                <input type="date" id="ledger-date" required onclick="this.showPicker && this.showPicker()"
-                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-blue-500 cursor-pointer">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Payment Channel / Gateway</label>
-                                <select id="ledger-channel" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
-                                    <option value="">-- Blank / None --</option>
-                                    <option value="Bank Wire">Bank Wire (Sky Blue)</option>
-                                    <option value="MasterCard">MasterCard (Amber)</option>
-                                    <option value="VISA">VISA (Purple)</option>
-                                    <option value="USDT">USDT (Emerald)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Transaction Description</label>
-                                <select id="ledger-desc-select" onchange="toggleCustomDescField()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
-                                    <option value="Interest Payment Due">Interest Payment Due</option>
-                                    <option value="Interest Payment Made">Interest Payment Made</option>
-                                    <option value="custom">Blank (Input Custom Description)</option>
-                                </select>
-                            </div>
-                            <div id="custom-desc-wrapper" class="hidden">
-                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Custom Description Text</label>
-                                <input type="text" id="ledger-desc-custom" placeholder="Type custom entry label..."
-                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Amount ($ USD format)</label>
-                                <input type="text" id="ledger-amount" placeholder="e.g. +$1,500.00 or $1,500.00" required
-                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Status</label>
-                                <select id="ledger-status" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
-                                    <option value="Settled">Settled (Green)</option>
-                                    <option value="Pending">Pending (Orange)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl transition text-xs uppercase tracking-wider cursor-pointer">
-                            Push Transaction to User Ledger
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Existing Transactions Management Table -->
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-4">
-                    <div class="border-b border-slate-800 pb-4 flex justify-between items-center">
-                        <div>
-                            <h2 class="text-lg font-bold text-white uppercase tracking-tight">Existing Transaction History</h2>
-                            <p class="text-xs text-slate-400">Review or delete individual records from the ledger timeline.</p>
-                        </div>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="border-b border-slate-800 text-[11px] font-mono uppercase tracking-wider text-slate-400">
-                                    <th class="py-3 px-3">Date</th>
-                                    <th class="py-3 px-3">Description</th>
-                                    <th class="py-3 px-3">Channel</th>
-                                    <th class="py-3 px-3 text-right">Amount</th>
-                                    <th class="py-3 px-3 text-center">Status</th>
-                                    <th class="py-3 px-3 text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-ledger-tbody" class="divide-y divide-slate-800/60 text-xs font-mono">
-                                <!-- Populated dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
             </div>
 
-            <!-- Column 3: Live Quick Tools & Status Log -->
+            <!-- Column 3: Quick Summary / Status -->
             <div class="space-y-6">
                 <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-4">
                     <div class="border-b border-slate-800 pb-3">
-                        <h2 class="text-sm font-bold text-white uppercase tracking-wider">Quick Preset Actions</h2>
+                        <h2 class="text-sm font-bold text-white uppercase tracking-wider">Account Status</h2>
                     </div>
-                    <div class="space-y-3">
-                        <button onclick="loadDefaultSeedData()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold py-2.5 px-4 rounded-xl transition text-xs uppercase tracking-wider text-left flex justify-between items-center cursor-pointer">
-                            <span>Reset to Default Seed Data</span>
-                            <span class="text-sky-400 font-mono">&#8635;</span>
-                        </button>
-                        <button onclick="clearEntireLedger()" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 font-semibold py-2.5 px-4 rounded-xl transition text-xs uppercase tracking-wider text-left flex justify-between items-center cursor-pointer">
-                            <span>Wipe All History Records</span>
-                            <span class="font-mono">&times;</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-4">
-                    <div class="border-b border-slate-800 pb-3">
-                        <h2 class="text-sm font-bold text-white uppercase tracking-wider">Active State Summary</h2>
-                    </div>
-                    <div id="admin-summary-box" class="space-y-3 text-xs font-mono text-slate-300">
-                        <!-- Loaded dynamically -->
+                    <div class="space-y-3 text-xs font-mono text-slate-300">
+                        <div class="flex justify-between py-1 border-b border-slate-800">
+                            <span class="text-slate-400">Live Status:</span>
+                            <span class="text-emerald-400 font-bold">Connected</span>
+                        </div>
+                        <div class="flex justify-between py-1">
+                            <span class="text-slate-400">Data Source:</span>
+                            <span class="text-white">LocalStorage Sync</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
         </div>
 
-    </div>
-
-    <!-- Modal for Adding / Editing Asset -->
-    <div id="asset-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-cardbg border border-cardborder rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
-            <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
-                <h3 id="asset-modal-title" class="text-base font-bold text-white uppercase">Add New Asset Position</h3>
-                <button onclick="closeAssetModal()" class="text-slate-400 hover:text-white font-bold">&times;</button>
+        <!-- Account History Section -->
+        <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-4">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-lg font-bold text-white uppercase tracking-tight">Account History</h2>
+                <p class="text-xs text-slate-400">Chronological ledger of deposits, withdrawals, and interest payments.</p>
             </div>
-            <form onsubmit="handleAssetFormSubmit(event)" class="space-y-4">
-                <input type="hidden" id="asset-edit-index" value="-1">
-                <div>
-                    <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Asset Name / Pair</label>
-                    <input type="text" id="asset-name" placeholder="e.g. XAU/USD Gold Spot" required
-                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Asset Type / Category</label>
-                    <input type="text" id="asset-type" placeholder="e.g. Precious Metals / Spot" required
-                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Buy Price</label>
-                        <input type="text" id="asset-buy" placeholder="2,332.50" required
-                            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Current Price</label>
-                        <input type="text" id="asset-current" placeholder="2,385.20" required
-                            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">P&L ($ or formatted string)</label>
-                    <input type="text" id="asset-pnl" placeholder="+1,317.50" required
-                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
-                </div>
-                <div class="flex justify-end space-x-3 pt-2">
-                    <button type="button" onclick="closeAssetModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold px-4 py-2 rounded-xl text-xs uppercase transition cursor-pointer">Cancel</button>
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-xl text-xs uppercase transition cursor-pointer">Save Asset</button>
-                </div>
-            </form>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-[11px] font-mono uppercase tracking-wider text-slate-400">
+                            <th class="py-3 px-3">Date</th>
+                            <th class="py-3 px-3">Description</th>
+                            <th class="py-3 px-3">Channel</th>
+                            <th class="py-3 px-3 text-right">Amount</th>
+                            <th class="py-3 px-3 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-ledger-tbody" class="divide-y divide-slate-800/60 text-xs font-mono">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
         </div>
+
     </div>
 
-    <!-- Admin Runtime Script -->
+    <!-- Frontend Runtime Script -->
     <script>
         const defaultData = {
             globalInvested: 39705.00,
             debtOwed: 14706.00,
             assets: [
-                { name: 'XAU/USD Gold Spot', type: 'Precious Metals / Spot', size: 'Active', buyPrice: '2,332.50', currentPrice: '2,385.20', pnl: '+1,317.50' },
-                { name: 'EUR/USD Major Pair', type: 'Foreign Exchange', size: 'Active', buyPrice: '1.0850', currentPrice: '1.0892', pnl: '+210.00' },
-                { name: 'GBP/USD Cable', type: 'Foreign Exchange', size: 'Active', buyPrice: '1.2720', currentPrice: '1.2685', pnl: '-105.00' },
-                { name: 'USD/JPY Cross', type: 'Foreign Exchange', size: 'Active', buyPrice: '154.20', currentPrice: '155.10', pnl: '+450.00' },
-                { name: 'BTC/USD Bitcoin', type: 'Cryptocurrency Asset', size: 'Active', buyPrice: '64,200.00', currentPrice: '67,500.00', pnl: '+3,300.00' },
-                { name: 'US30 Dow Jones', type: 'Global Index', size: 'Active', buyPrice: '38,900.00', currentPrice: '39,250.00', pnl: '+875.00' }
+                { name: 'XAU/USD Gold Spot', type: 'Precious Metals / Spot', pnl: '+1,317.50' },
+                { name: 'EUR/USD Major Pair', type: 'Foreign Exchange', pnl: '+210.00' },
+                { name: 'GBP/USD Cable', type: 'Foreign Exchange', pnl: '-105.00' },
+                { name: 'USD/JPY Cross', type: 'Foreign Exchange', pnl: '+450.00' },
+                { name: 'BTC/USD Bitcoin', type: 'Cryptocurrency Asset', pnl: '+3,300.00' },
+                { name: 'US30 Dow Jones', type: 'Global Index', pnl: '+875.00' }
             ],
             ledger: [
                 { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'Bank Wire', channelClass: 'bg-sky-500/15 text-sky-400 border-sky-500/20', amount: '+$36,765.00', status: 'Settled' },
@@ -311,255 +149,56 @@
             return JSON.parse(localStorage.getItem('dashboardData')) || defaultData;
         }
 
-        function saveAppData(data) {
-            localStorage.setItem('dashboardData', JSON.stringify(data));
-            initAdmin();
-        }
-
-        function toggleCustomDescField() {
-            const val = document.getElementById('ledger-desc-select').value;
-            const customWrapper = document.getElementById('custom-desc-wrapper');
-            if (val === 'custom') {
-                customWrapper.classList.remove('hidden');
-                document.getElementById('ledger-desc-custom').setAttribute('required', 'true');
-            } else {
-                customWrapper.classList.add('hidden');
-                document.getElementById('ledger-desc-custom').removeAttribute('required');
-            }
-        }
-
-        function initAdmin() {
+        function initDashboard() {
             const data = getAppData();
-            document.getElementById('admin-invested').value = data.globalInvested;
-            document.getElementById('admin-debt').value = data.debtOwed;
 
-            // Set default date input to today if not already set
-            if (!document.getElementById('ledger-date').value) {
-                const today = new Date().toISOString().split('T')[0];
-                document.getElementById('ledger-date').value = today;
-            }
+            // Populate core metric cards
+            document.getElementById('stat-invested').innerText = '$' + Number(data.globalInvested).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('stat-debt').innerText = '$' + Number(data.debtOwed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-            const summaryBox = document.getElementById('admin-summary-box');
-            summaryBox.innerHTML = `
-                <div class="flex justify-between py-1 border-b border-slate-800">
-                    <span class="text-slate-400">Total Assets Tracked:</span>
-                    <span class="font-bold text-white">${data.assets.length} items</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-800">
-                    <span class="text-slate-400">Ledger History Rows:</span>
-                    <span class="font-bold text-white">${data.ledger.length} records</span>
-                </div>
-                <div class="flex justify-between py-1">
-                    <span class="text-slate-400">Sync Status:</span>
-                    <span class="text-emerald-400 font-bold">Active (LocalStorage)</span>
-                </div>
-            `;
-
-            // Populate Assets Management Table
-            const assetsTbody = document.getElementById('admin-assets-tbody');
+            // Populate Portfolio Assets Table (Without Entry & Current Price columns)
+            const assetsTbody = document.getElementById('user-assets-tbody');
             assetsTbody.innerHTML = '';
             if (data.assets.length === 0) {
-                assetsTbody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-slate-500">No portfolio assets found.</td></tr>`;
+                assetsTbody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-slate-500">No active assets found.</td></tr>`;
             } else {
-                data.assets.forEach((asset, index) => {
-                    let isNegative = asset.pnl.startsWith('-');
-                    let pnlClass = isNegative ? 'text-rose-400' : 'text-emerald-400';
+                data.assets.forEach(asset => {
+                    let pnlStr = asset.pnl || '+0.00';
+                    let isNegative = pnlStr.startsWith('-');
+                    let pnlClass = isNegative ? 'text-rose-400 font-semibold' : 'text-emerald-400 font-semibold';
                     assetsTbody.innerHTML += `
                         <tr class="hover:bg-slate-800/30 transition">
-                            <td class="py-2.5 px-3 text-white font-bold">${asset.name}</td>
-                            <td class="py-2.5 px-3 text-slate-400">${asset.type}</td>
-                            <td class="py-2.5 px-3 text-right text-slate-300">${asset.buyPrice}</td>
-                            <td class="py-2.5 px-3 text-right text-slate-300">${asset.currentPrice}</td>
-                            <td class="py-2.5 px-3 text-right ${pnlClass} font-semibold">${asset.pnl}</td>
-                            <td class="py-2.5 px-3 text-center space-x-2">
-                                <button onclick="editAsset(${index})" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 px-2.5 py-1 rounded transition cursor-pointer text-[10px] uppercase font-bold">Edit</button>
-                                <button onclick="deleteAsset(${index})" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 px-2.5 py-1 rounded transition cursor-pointer text-[10px] uppercase font-bold">Delete</button>
-                            </td>
+                            <td class="py-3 px-3 text-white font-bold">${asset.name}</td>
+                            <td class="py-3 px-3 text-slate-400">${asset.type}</td>
+                            <td class="py-3 px-3 text-right ${pnlClass}">${pnlStr}</td>
                         </tr>
                     `;
                 });
             }
 
-            // Populate Admin Manage / Delete Ledger Table
-            const adminTbody = document.getElementById('admin-ledger-tbody');
-            adminTbody.innerHTML = '';
+            // Populate User Ledger Table
+            const ledgerTbody = document.getElementById('user-ledger-tbody');
+            ledgerTbody.innerHTML = '';
             if (data.ledger.length === 0) {
-                adminTbody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-slate-500">No transaction records found.</td></tr>`;
+                ledgerTbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500">No transaction records found.</td></tr>`;
             } else {
-                data.ledger.forEach((row, index) => {
+                data.ledger.forEach(row => {
                     let isPending = row.status === 'Pending';
                     let statusClass = isPending ? 'text-orange-400' : 'text-emerald-400';
-                    adminTbody.innerHTML += `
+                    ledgerTbody.innerHTML += `
                         <tr class="hover:bg-slate-800/30 transition">
-                            <td class="py-2.5 px-3 text-slate-300">${row.date}</td>
-                            <td class="py-2.5 px-3 text-white font-sans">${row.desc}</td>
-                            <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded border ${row.channelClass}">${row.channel}</span></td>
-                            <td class="py-2.5 px-3 text-right ${isPending ? 'text-orange-400 font-semibold' : 'text-emerald-400 font-semibold'}">${row.amount}</td>
-                            <td class="py-2.5 px-3 text-center ${statusClass}">${row.status}</td>
-                            <td class="py-2.5 px-3 text-center">
-                                <button onclick="deleteLedgerItem(${index})" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 px-2.5 py-1 rounded transition cursor-pointer text-[10px] uppercase font-bold">
-                                    Delete
-                                </button>
-                            </td>
+                            <td class="py-3 px-3 text-slate-300">${row.date}</td>
+                            <td class="py-3 px-3 text-white font-sans">${row.desc}</td>
+                            <td class="py-3 px-3"><span class="px-2 py-0.5 rounded border ${row.channelClass}">${row.channel}</span></td>
+                            <td class="py-3 px-3 text-right ${isPending ? 'text-orange-400 font-semibold' : 'text-emerald-400 font-semibold'}">${row.amount}</td>
+                            <td class="py-3 px-3 text-center ${statusClass}">${row.status}</td>
                         </tr>
                     `;
                 });
             }
         }
 
-        // Asset Modal Controls
-        function openAssetModal() {
-            document.getElementById('asset-modal-title').innerText = 'Add New Asset Position';
-            document.getElementById('asset-edit-index').value = '-1';
-            document.getElementById('asset-name').value = '';
-            document.getElementById('asset-type').value = '';
-            document.getElementById('asset-buy').value = '';
-            document.getElementById('asset-current').value = '';
-            document.getElementById('asset-pnl').value = '';
-            document.getElementById('asset-modal').classList.remove('hidden');
-            document.getElementById('asset-modal').classList.add('flex');
-        }
-
-        function closeAssetModal() {
-            document.getElementById('asset-modal').classList.remove('flex');
-            document.getElementById('asset-modal').classList.add('hidden');
-        }
-
-        function editAsset(index) {
-            let data = getAppData();
-            let asset = data.assets[index];
-            document.getElementById('asset-modal-title').innerText = 'Edit Asset Position';
-            document.getElementById('asset-edit-index').value = index;
-            document.getElementById('asset-name').value = asset.name;
-            document.getElementById('asset-type').value = asset.type;
-            document.getElementById('asset-buy').value = asset.buyPrice;
-            document.getElementById('asset-current').value = asset.currentPrice;
-            document.getElementById('asset-pnl').value = asset.pnl;
-            document.getElementById('asset-modal').classList.remove('hidden');
-            document.getElementById('asset-modal').classList.add('flex');
-        }
-
-        function handleAssetFormSubmit(event) {
-            event.preventDefault();
-            let data = getAppData();
-            let editIndex = parseInt(document.getElementById('asset-edit-index').value);
-
-            let newAsset = {
-                name: document.getElementById('asset-name').value,
-                type: document.getElementById('asset-type').value,
-                size: 'Active',
-                buyPrice: document.getElementById('asset-buy').value,
-                currentPrice: document.getElementById('asset-current').value,
-                pnl: document.getElementById('asset-pnl').value
-            };
-
-            if (editIndex === -1) {
-                data.assets.push(newAsset);
-            } else {
-                data.assets[editIndex] = newAsset;
-            }
-
-            saveAppData(data);
-            closeAssetModal();
-            alert('Portfolio assets updated successfully.');
-        }
-
-        function deleteAsset(index) {
-            if (confirm('Are you sure you want to delete this asset position?')) {
-                let data = getAppData();
-                data.assets.splice(index, 1);
-                saveAppData(data);
-            }
-        }
-
-        function deleteLedgerItem(index) {
-            if (confirm('Are you sure you want to delete this specific transaction record?')) {
-                let data = getAppData();
-                data.ledger.splice(index, 1);
-                saveAppData(data);
-            }
-        }
-
-        function handleCoreUpdate(event) {
-            event.preventDefault();
-            let data = getAppData();
-            data.globalInvested = parseFloat(document.getElementById('admin-invested').value) || 0;
-            data.debtOwed = parseFloat(document.getElementById('admin-debt').value) || 0;
-            saveAppData(data);
-            alert('Global portfolio metrics updated successfully.');
-        }
-
-        function handleLedgerPush(event) {
-            event.preventDefault();
-            let data = getAppData();
-
-            let rawDate = document.getElementById('ledger-date').value; // Format: YYYY-MM-DD
-            let formattedDate = rawDate;
-            if (rawDate) {
-                const dateObj = new Date(rawDate + 'T00:00:00');
-                formattedDate = dateObj.toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' });
-            }
-
-            let channel = document.getElementById('ledger-channel').value;
-            
-            let descSelect = document.getElementById('ledger-desc-select').value;
-            let desc = descSelect === 'custom' ? document.getElementById('ledger-desc-custom').value : descSelect;
-
-            let amount = document.getElementById('ledger-amount').value;
-            let status = document.getElementById('ledger-status').value;
-
-            // Handle badge styling based on channel selection
-            let channelClass = 'bg-slate-500/15 text-slate-400 border-slate-500/20';
-            let displayChannel = channel ? channel : '—';
-
-            if (channel === 'MasterCard') {
-                channelClass = 'bg-amber-500/15 text-amber-400 border-amber-500/20';
-            } else if (channel === 'VISA') {
-                channelClass = 'bg-purple-500/15 text-purple-400 border-purple-500/20';
-            } else if (channel === 'USDT') {
-                channelClass = 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20';
-            } else if (channel === 'Bank Wire') {
-                channelClass = 'bg-sky-500/15 text-sky-400 border-sky-500/20';
-            }
-
-            data.ledger.push({
-                date: formattedDate,
-                desc: desc,
-                channel: displayChannel,
-                channelClass: channelClass,
-                amount: amount,
-                status: status
-            });
-
-            saveAppData(data);
-            alert('Custom transaction successfully pushed to user ledger.');
-            event.target.reset();
-            
-            // Re-initialize date picker to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('ledger-date').value = today;
-            
-            toggleCustomDescField();
-        }
-
-        function loadDefaultSeedData() {
-            if (confirm('Reset all user data back to default settings?')) {
-                localStorage.setItem('dashboardData', JSON.stringify(defaultData));
-                initAdmin();
-                alert('Data successfully reset to defaults.');
-            }
-        }
-
-        function clearEntireLedger() {
-            if (confirm('Are you sure you want to clear all history log entries?')) {
-                let data = getAppData();
-                data.ledger = [];
-                saveAppData(data);
-                alert('Ledger history cleared.');
-            }
-        }
-
-        window.onload = initAdmin;
+        window.onload = initDashboard;
     </script>
 </body>
 </html>

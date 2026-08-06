@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin Control</title>
+    <title>Admin Dashboard & Ledger Management</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -21,265 +22,283 @@
     </script>
 </head>
 <body class="bg-darkbg text-slate-100 min-h-screen p-4 md:p-8 font-sans">
-    <div class="max-w-4xl mx-auto space-y-6">
+
+    <div class="max-w-7xl mx-auto space-y-6">
         
-        <!-- Admin Header -->
-        <div class="flex justify-between items-center bg-cardbg border border-cardborder px-6 py-4 rounded-2xl shadow-xl">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
             <div>
-                <h1 class="text-xl font-bold text-white uppercase tracking-wider">Dashboard Admin Control</h1>
-                <p class="text-xs text-slate-400">Modify financial metrics, active positions, and account history records in real-time.</p>
-            </div>
-            <a href="index.html" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition uppercase tracking-wider">
-                View Live Dashboard &rarr;
-            </a>
-        </div>
-
-        <!-- General Inputs Form -->
-        <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl space-y-4">
-            <h2 class="text-sm font-mono text-blue-400 uppercase tracking-wider">Global Summary Values</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Global Invested Amount ($ USD)</label>
-                    <input type="number" step="any" id="admin-invested" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono text-sm focus:outline-none focus:border-blue-500">
+                <div class="flex items-center space-x-2">
+                    <h1 class="text-2xl font-bold tracking-tight text-white uppercase">Admin Control Panel</h1>
+                    <span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-mono px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">RESTRICTED ACCESS</span>
                 </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Debt Owed ($ USD)</label>
-                    <input type="number" step="any" id="admin-debt" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono text-sm focus:outline-none focus:border-blue-500">
+                <p class="text-slate-400 text-sm mt-1">Manage global user financials, override balances, and push custom ledger entries.</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <a href="index.html" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold px-4 py-2 rounded-xl transition uppercase tracking-wider">
+                    View Live User App &rarr;
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Grid Controls -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Column 1 & 2: Global Financial Overrides & Ledger Push -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Balance & Debt Control Box -->
+                <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-6">
+                    <div class="border-b border-slate-800 pb-4">
+                        <h2 class="text-lg font-bold text-white uppercase tracking-tight">Global Portfolio Core Overrides</h2>
+                        <p class="text-xs text-slate-400">Modify the master user metrics shown on the frontend dashboard.</p>
+                    </div>
+
+                    <form onsubmit="handleCoreUpdate(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Global Invested Amount ($)</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 font-bold">$</span>
+                                    <input type="number" id="admin-invested" step="any" required
+                                        class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-7 pr-4 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Debt Owed ($)</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 font-bold">$</span>
+                                    <input type="number" id="admin-debt" step="any" required
+                                        class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-7 pr-4 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl transition text-xs uppercase tracking-wider cursor-pointer">
+                            Save Core Metrics Override
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Add Custom Ledger Entry Box -->
+                <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-6">
+                    <div class="border-b border-slate-800 pb-4">
+                        <h2 class="text-lg font-bold text-white uppercase tracking-tight">Push Custom Account History Entry</h2>
+                        <p class="text-xs text-slate-400">Add a verified transaction record directly to the user's ledger timeline.</p>
+                    </div>
+
+                    <form onsubmit="handleLedgerPush(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Date String</label>
+                                <input type="text" id="ledger-date" placeholder="e.g. August 05, 2026" required
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Payment Channel / Gateway</label>
+                                <select id="ledger-channel" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+                                    <option value="Bank Wire">Bank Wire (Sky Blue)</option>
+                                    <option value="MasterCard">MasterCard (Amber)</option>
+                                    <option value="VISA">VISA (Purple)</option>
+                                    <option value="USDT">USDT (Emerald)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Transaction Description</label>
+                                <select id="ledger-desc-select" onchange="toggleCustomDescField()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+                                    <option value="Interest Payment Due">Interest Payment Due</option>
+                                    <option value="Interest Payment Made">Interest Payment Made</option>
+                                    <option value="custom">Blank (Input Custom Description)</option>
+                                </select>
+                            </div>
+                            <div id="custom-desc-wrapper" class="hidden">
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Custom Description Text</label>
+                                <input type="text" id="ledger-desc-custom" placeholder="Type custom entry label..."
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Amount ($ USD format)</label>
+                                <input type="text" id="ledger-amount" placeholder="e.g. +$1,500.00 or $1,500.00" required
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Status</label>
+                                <select id="ledger-status" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+                                    <option value="Settled">Settled (Green)</option>
+                                    <option value="Pending">Pending (Orange)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl transition text-xs uppercase tracking-wider cursor-pointer">
+                            Push Transaction to User Ledger
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- Column 3: Live Quick Tools & Status Log -->
+            <div class="space-y-6">
+                <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-4">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h2 class="text-sm font-bold text-white uppercase tracking-wider">Quick Preset Actions</h2>
+                    </div>
+                    <div class="space-y-3">
+                        <button onclick="loadDefaultSeedData()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold py-2.5 px-4 rounded-xl transition text-xs uppercase tracking-wider text-left flex justify-between items-center cursor-pointer">
+                            <span>Reset to Default Seed Data</span>
+                            <span class="text-sky-400 font-mono">&#8635;</span>
+                        </button>
+                        <button onclick="clearEntireLedger()" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 font-semibold py-2.5 px-4 rounded-xl transition text-xs uppercase tracking-wider text-left flex justify-between items-center cursor-pointer">
+                            <span>Wipe All History Records</span>
+                            <span class="font-mono">&times;</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-4">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h2 class="text-sm font-bold text-white uppercase tracking-wider">Active State Summary</h2>
+                    </div>
+                    <div id="admin-summary-box" class="space-y-3 text-xs font-mono text-slate-300">
+                        <!-- Loaded dynamically -->
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Asset Manager -->
-        <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl space-y-4">
-            <div class="flex justify-between items-center">
-                <h2 class="text-sm font-mono text-blue-400 uppercase tracking-wider">Active Assets & Auto PnL Calculator</h2>
-                <span class="text-[11px] text-slate-400">PnL = Invested × ((Current - Entry) / Entry)</span>
-            </div>
-            <div id="admin-assets-container" class="space-y-4">
-                <!-- Loaded via JS -->
-            </div>
-            <button onclick="addAssetRow()" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-semibold px-4 py-2 rounded-lg transition uppercase tracking-wider">
-                + Add New Asset Card
-            </button>
         </div>
-
-        <!-- Account History / Ledger Manager -->
-        <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl space-y-4">
-            <h2 class="text-sm font-mono text-blue-400 uppercase tracking-wider">Account History Ledger Editor</h2>
-            <div id="admin-ledger-container" class="space-y-4">
-                <!-- Loaded via JS -->
-            </div>
-            <button onclick="addLedgerRow()" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-semibold px-4 py-2 rounded-lg transition uppercase tracking-wider">
-                + Add Ledger Entry
-            </button>
-        </div>
-
-        <!-- Save Button -->
-        <button onclick="saveChanges()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-lg text-sm uppercase tracking-wider cursor-pointer">
-            Save Changes & Update Dashboard
-        </button>
 
     </div>
 
+    <!-- Admin Runtime Script -->
     <script>
         const defaultData = {
             globalInvested: 39705.00,
             debtOwed: 14706.00,
             assets: [
-                { name: 'XAU/USD Gold Spot', type: 'Precious Metals / Spot', investedAmount: 10000, buyPrice: 2332.50, currentPrice: 2385.20, pnl: '+1,317.50' },
-                { name: 'EUR/USD Major Pair', type: 'Foreign Exchange', investedAmount: 8000, buyPrice: 1.0850, currentPrice: 1.0892, pnl: '+309.68' },
-                { name: 'GBP/USD Cable', type: 'Foreign Exchange', investedAmount: 6000, buyPrice: 1.2720, currentPrice: 1.2685, pnl: '-165.09' },
-                { name: 'USD/JPY Cross', type: 'Foreign Exchange', investedAmount: 5000, buyPrice: 154.20, currentPrice: 155.10, pnl: '+291.83' },
-                { name: 'BTC/USD Bitcoin', type: 'Cryptocurrency Asset', investedAmount: 6000, buyPrice: 64200.00, currentPrice: 67500.00, pnl: '+308.41' },
-                { name: 'US30 Dow Jones', type: 'Global Index', investedAmount: 4705, buyPrice: 38900.00, currentPrice: 39250.00, pnl: '+423.52' }
+                { name: 'XAU/USD Gold Spot', type: 'Precious Metals / Spot', size: 'Active', buyPrice: '2,332.50', currentPrice: '2,385.20', pnl: '+1,317.50' },
+                { name: 'EUR/USD Major Pair', type: 'Foreign Exchange', size: 'Active', buyPrice: '1.0850', currentPrice: '1.0892', pnl: '+210.00' },
+                { name: 'GBP/USD Cable', type: 'Foreign Exchange', size: 'Active', buyPrice: '1.2720', currentPrice: '1.2685', pnl: '-105.00' },
+                { name: 'USD/JPY Cross', type: 'Foreign Exchange', size: 'Active', buyPrice: '154.20', currentPrice: '155.10', pnl: '+450.00' },
+                { name: 'BTC/USD Bitcoin', type: 'Cryptocurrency Asset', size: 'Active', buyPrice: '64,200.00', currentPrice: '67,500.00', pnl: '+3,300.00' },
+                { name: 'US30 Dow Jones', type: 'Global Index', size: 'Active', buyPrice: '38,900.00', currentPrice: '39,250.00', pnl: '+875.00' }
             ],
             ledger: [
-                { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'Wire', amount: '+$36,765.00', status: 'Settled' },
-                { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'USDT', amount: '+$2,940.00', status: 'Settled' },
-                { date: 'July 29, 2026', desc: 'Interest Payment Made', channel: 'VISA', amount: '$1,838.25', status: 'Pending' }
+                { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'Bank Wire', channelClass: 'bg-sky-500/15 text-sky-400 border-sky-500/20', amount: '+$36,765.00', status: 'Settled' },
+                { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'USDT', channelClass: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20', amount: '+$2,940.00', status: 'Settled' },
+                { date: 'July 15, 2026', desc: 'Interest Payment Made', channel: 'MasterCard', channelClass: 'bg-amber-500/15 text-amber-400 border-amber-500/20', amount: '$1,838.25', status: 'Settled' },
+                { date: 'August 04, 2026', desc: 'Profit Withdrawal Request', channel: 'VISA', channelClass: 'bg-purple-500/15 text-purple-400 border-purple-500/20', amount: '$2,500.00', status: 'Pending' }
             ]
         };
 
-        let currentData = JSON.parse(localStorage.getItem('dashboardData')) || defaultData;
+        function getAppData() {
+            return JSON.parse(localStorage.getItem('dashboardData')) || defaultData;
+        }
 
-        currentData.assets.forEach(asset => {
-            if (asset.investedAmount === undefined) asset.investedAmount = 5000;
-        });
+        function saveAppData(data) {
+            localStorage.setItem('dashboardData', JSON.stringify(data));
+            initAdmin();
+        }
 
-        function generateDateList() {
-            let dates = [];
-            let startDate = new Date('2026-06-11');
-            let endDate = new Date('2027-12-31');
+        function toggleCustomDescField() {
+            const val = document.getElementById('ledger-desc-select').value;
+            const customWrapper = document.getElementById('custom-desc-wrapper');
+            if (val === 'custom') {
+                customWrapper.classList.remove('hidden');
+                document.getElementById('ledger-desc-custom').setAttribute('required', 'true');
+            } else {
+                customWrapper.classList.add('hidden');
+                document.getElementById('ledger-desc-custom').removeAttribute('required');
+            }
+        }
+
+        function initAdmin() {
+            const data = getAppData();
+            document.getElementById('admin-invested').value = data.globalInvested;
+            document.getElementById('admin-debt').value = data.debtOwed;
+
+            const summaryBox = document.getElementById('admin-summary-box');
+            summaryBox.innerHTML = `
+                <div class="flex justify-between py-1 border-b border-slate-800">
+                    <span class="text-slate-400">Total Assets Tracked:</span>
+                    <span class="font-bold text-white">${data.assets.length} items</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-800">
+                    <span class="text-slate-400">Ledger History Rows:</span>
+                    <span class="font-bold text-white">${data.ledger.length} records</span>
+                </div>
+                <div class="flex justify-between py-1">
+                    <span class="text-slate-400">Sync Status:</span>
+                    <span class="text-emerald-400 font-bold">Active (LocalStorage)</span>
+                </div>
+            `;
+        }
+
+        function handleCoreUpdate(event) {
+            event.preventDefault();
+            let data = getAppData();
+            data.globalInvested = parseFloat(document.getElementById('admin-invested').value) || 0;
+            data.debtOwed = parseFloat(document.getElementById('admin-debt').value) || 0;
+            saveAppData(data);
+            alert('Global portfolio metrics updated successfully.');
+        }
+
+        function handleLedgerPush(event) {
+            event.preventDefault();
+            let data = getAppData();
+
+            let date = document.getElementById('ledger-date').value;
+            let channel = document.getElementById('ledger-channel').value;
             
-            let curr = new Date(startDate);
-            while (curr <= endDate) {
-                let options = { month: 'long', day: 'numeric', year: 'numeric' };
-                dates.push(curr.toLocaleDateString('en-US', options));
-                curr.setDate(curr.getDate() + 1);
+            let descSelect = document.getElementById('ledger-desc-select').value;
+            let desc = descSelect === 'custom' ? document.getElementById('ledger-desc-custom').value : descSelect;
+
+            let amount = document.getElementById('ledger-amount').value;
+            let status = document.getElementById('ledger-status').value;
+
+            let channelClass = 'bg-sky-500/15 text-sky-400 border-sky-500/20';
+            if (channel === 'MasterCard') channelClass = 'bg-amber-500/15 text-amber-400 border-amber-500/20';
+            if (channel === 'VISA') channelClass = 'bg-purple-500/15 text-purple-400 border-purple-500/20';
+            if (channel === 'USDT') channelClass = 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20';
+
+            data.ledger.unshift({
+                date: date,
+                desc: desc,
+                channel: channel,
+                channelClass: channelClass,
+                amount: amount,
+                status: status
+            });
+
+            saveAppData(data);
+            alert('Custom transaction successfully pushed to user ledger.');
+            event.target.reset();
+            toggleCustomDescField();
+        }
+
+        function loadDefaultSeedData() {
+            if (confirm('Reset all user data back to default settings?')) {
+                localStorage.setItem('dashboardData', JSON.stringify(defaultData));
+                initAdmin();
+                alert('Data successfully reset to defaults.');
             }
-            return dates;
         }
 
-        const availableDates = generateDateList();
-        const availablePaymentTypes = ['', 'Wire', 'VISA', 'MasterCard', 'USDT'];
-        const availableStatuses = ['Settled', 'Pending'];
-
-        function loadAdminForm() {
-            document.getElementById('admin-invested').value = currentData.globalInvested;
-            document.getElementById('admin-debt').value = currentData.debtOwed;
-
-            // Render Asset Editors
-            const assetContainer = document.getElementById('admin-assets-container');
-            assetContainer.innerHTML = '';
-            currentData.assets.forEach((asset, idx) => {
-                assetContainer.innerHTML += `
-                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
-                        <div class="md:col-span-2">
-                            <label class="text-slate-400 block mb-1">Asset Name</label>
-                            <input type="text" value="${asset.name}" id="asset-name-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">Asset Type</label>
-                            <input type="text" value="${asset.type}" id="asset-type-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">Invested Amount ($)</label>
-                            <input type="number" step="any" value="${asset.investedAmount}" id="asset-inv-${idx}" oninput="calculateRowPnl(${idx})" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white font-mono">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">Entry Price</label>
-                            <input type="number" step="any" value="${asset.buyPrice}" id="asset-buy-${idx}" oninput="calculateRowPnl(${idx})" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white font-mono">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">Current Price</label>
-                            <input type="number" step="any" value="${asset.currentPrice}" id="asset-curr-${idx}" oninput="calculateRowPnl(${idx})" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white font-mono">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">Auto-Calculated PnL</label>
-                            <input type="text" readonly value="${asset.pnl}" id="asset-pnl-preview-${idx}" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 font-mono font-bold ${asset.pnl.startsWith('-') ? 'text-rose-400' : 'text-emerald-400'}">
-                        </div>
-                        <div class="flex items-end">
-                            <button onclick="removeAsset(${idx})" class="w-full bg-rose-600/20 text-rose-400 border border-rose-500/30 hover:bg-rose-600/30 py-1.5 rounded-lg transition font-semibold">Delete Asset</button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            // Render Ledger Editors with Payment Type and Blank Option
-            const ledgerContainer = document.getElementById('admin-ledger-container');
-            ledgerContainer.innerHTML = '';
-            currentData.ledger.forEach((item, idx) => {
-                let dateOptions = availableDates.map(d => `<option value="${d}" ${item.date === d ? 'selected' : ''}>${d}</option>`).join('');
-                let paymentOptions = availablePaymentTypes.map(pt => `<option value="${pt}" ${item.channel === pt ? 'selected' : ''}>${pt === '' ? '-- Select Payment Type --' : pt}</option>`).join('');
-                let statusOptions = availableStatuses.map(s => `<option value="${s}" ${item.status === s ? 'selected' : ''}>${s}</option>`).join('');
-
-                ledgerContainer.innerHTML += `
-                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                        <div>
-                            <label class="text-slate-400 block mb-1">Date</label>
-                            <select id="ledger-date-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
-                                ${dateOptions}
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">Description</label>
-                            <input type="text" value="${item.desc}" id="ledger-desc-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">Payment Type</label>
-                            <select id="ledger-chan-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-semibold">
-                                ${paymentOptions}
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">Amount (e.g. +$1,000.00)</label>
-                            <input type="text" value="${item.amount}" id="ledger-amt-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">Status</label>
-                            <select id="ledger-stat-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
-                                ${statusOptions}
-                            </select>
-                        </div>
-                        <div class="flex items-end">
-                            <button onclick="removeLedger(${idx})" class="w-full bg-rose-600/20 text-rose-400 border border-rose-500/30 hover:bg-rose-600/30 py-2 rounded-lg transition font-semibold">Delete Record</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function calculateRowPnl(idx) {
-            let invested = parseFloat(document.getElementById(`asset-inv-${idx}`).value) || 0;
-            let buy = parseFloat(document.getElementById(`asset-buy-${idx}`).value) || 0;
-            let curr = parseFloat(document.getElementById(`asset-curr-${idx}`).value) || 0;
-
-            let previewEl = document.getElementById(`asset-pnl-preview-${idx}`);
-
-            if (buy === 0) {
-                previewEl.value = "$0.00";
-                previewEl.className = "w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 font-mono font-bold text-slate-300";
-                return;
+        function clearEntireLedger() {
+            if (confirm('Are you sure you want to clear all history log entries?')) {
+                let data = getAppData();
+                data.ledger = [];
+                saveAppData(data);
+                alert('Ledger history cleared.');
             }
-
-            let pnlVal = invested * ((curr - buy) / buy);
-            let formattedPnl = (pnlVal >= 0 ? '+' : '') + '$' + Math.abs(pnlVal).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            if (pnlVal < 0) {
-                formattedPnl = '-' + '$' + Math.abs(pnlVal).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            }
-
-            previewEl.value = formattedPnl;
-            previewEl.className = `w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 font-mono font-bold ${pnlVal >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
         }
 
-        function addAssetRow() {
-            currentData.assets.push({ name: 'New Asset', type: 'Foreign Exchange', investedAmount: 5000, buyPrice: 1.0000, currentPrice: 1.0000, pnl: '+$0.00' });
-            loadAdminForm();
-        }
-
-        function removeAsset(idx) {
-            currentData.assets.splice(idx, 1);
-            loadAdminForm();
-        }
-
-        function addLedgerRow() {
-            currentData.ledger.push({ date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: '', amount: '$0.00', status: 'Pending' });
-            loadAdminForm();
-        }
-
-        function removeLedger(idx) {
-            currentData.ledger.splice(idx, 1);
-            loadAdminForm();
-        }
-
-        function saveChanges() {
-            currentData.globalInvested = parseFloat(document.getElementById('admin-invested').value) || 0;
-            currentData.debtOwed = parseFloat(document.getElementById('admin-debt').value) || 0;
-
-            // Collect Asset Updates
-            currentData.assets.forEach((asset, idx) => {
-                asset.name = document.getElementById(`asset-name-${idx}`).value;
-                asset.type = document.getElementById(`asset-type-${idx}`).value;
-                asset.investedAmount = parseFloat(document.getElementById(`asset-inv-${idx}`).value) || 0;
-                asset.buyPrice = parseFloat(document.getElementById(`asset-buy-${idx}`).value) || 0;
-                asset.currentPrice = parseFloat(document.getElementById(`asset-curr-${idx}`).value) || 0;
-                asset.pnl = document.getElementById(`asset-pnl-preview-${idx}`).value;
-            });
-
-            // Collect Ledger Updates
-            currentData.ledger.forEach((item, idx) => {
-                item.date = document.getElementById(`ledger-date-${idx}`).value;
-                item.desc = document.getElementById(`ledger-desc-${idx}`).value;
-                item.channel = document.getElementById(`ledger-chan-${idx}`).value;
-                item.amount = document.getElementById(`ledger-amt-${idx}`).value;
-                item.status = document.getElementById(`ledger-stat-${idx}`).value;
-            });
-
-            localStorage.setItem('dashboardData', JSON.stringify(currentData));
-            alert('Settings and Account History saved successfully! The dashboard has been updated.');
-        }
-
-        window.onload = loadAdminForm;
+        window.onload = initAdmin;
     </script>
 </body>
 </html>

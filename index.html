@@ -3,64 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Financial Dashboard</title>
+    <title>Financial Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkbg: '#0f172a',
-                        cardbg: '#1e293b',
-                        cardborder: '#334155',
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="bg-darkbg text-slate-100 min-h-screen p-4 md:p-8 font-sans">
-    <div class="max-w-5xl mx-auto space-y-6">
+<body class="bg-slate-950 text-slate-100 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto space-y-6">
         
-        <!-- Dashboard Header -->
-        <div class="flex justify-between items-center bg-cardbg border border-cardborder px-6 py-4 rounded-2xl shadow-xl">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
             <div>
-                <h1 class="text-xl font-bold text-white uppercase tracking-wider">Live Financial Dashboard</h1>
-                <p class="text-xs text-slate-400">Real-time overview of active positions, capital, and account history.</p>
+                <h1 class="text-2xl font-bold tracking-tight text-white">Trading Portfolio Dashboard</h1>
+                <p class="text-sm text-slate-400">Overview of active investments, balances, and account history.</p>
             </div>
-            <a href="admin.html" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-4 py-2 rounded-xl transition uppercase tracking-wider border border-slate-700">
-                Open Admin Control &rarr;
+            <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-xl text-sm transition">
+                Admin Control &rarr;
             </a>
         </div>
 
-        <!-- Global Summary Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
-                <p class="text-xs font-mono text-slate-400 uppercase">Global Invested Amount</p>
-                <h3 id="dash-invested" class="text-2xl font-bold font-mono text-white mt-1">$0.00</h3>
+        <!-- Metric Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+                <p class="text-xs font-mono uppercase tracking-wider text-slate-400">Total Invested Capital</p>
+                <h2 id="dash-invested" class="text-3xl font-bold font-mono text-white mt-2">$0.00</h2>
             </div>
-            <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
-                <p class="text-xs font-mono text-slate-400 uppercase">Debt Owed</p>
-                <h3 id="dash-debt" class="text-2xl font-bold font-mono text-rose-400 mt-1">$0.00</h3>
-            </div>
-        </div>
-
-        <!-- Active Assets Grid -->
-        <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl space-y-4">
-            <h2 class="text-sm font-mono text-blue-400 uppercase tracking-wider">Active Assets & Performance</h2>
-            <div id="dash-assets-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Dynamically populated via JavaScript -->
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+                <p class="text-xs font-mono uppercase tracking-wider text-slate-400">Total Debt Owed</p>
+                <h2 id="dash-debt" class="text-3xl font-bold font-mono text-rose-400 mt-2">$0.00</h2>
             </div>
         </div>
 
-        <!-- Account History / Ledger Section -->
-        <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-4">
-            <div class="flex justify-between items-center">
-                <h2 class="text-sm font-mono text-blue-400 uppercase tracking-wider">Account History Ledger</h2>
-                <span class="text-xs text-slate-400">Live Transaction & Payment Records</span>
+        <!-- Asset Portfolio Grid -->
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg space-y-4">
+            <h3 class="text-lg font-semibold text-white">Active Asset Positions</h3>
+            <div id="dash-assets-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Populated via JS -->
             </div>
+        </div>
 
+        <!-- Account History / Ledger -->
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg space-y-4">
+            <h3 class="text-lg font-semibold text-white">Account History</h3>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -72,8 +54,8 @@
                             <th class="py-3 px-4 text-center">Status</th>
                         </tr>
                     </thead>
-                    <tbody id="ledger-tbody" class="divide-y divide-slate-800/60 text-sm">
-                        <!-- Dynamically populated via JavaScript -->
+                    <tbody id="ledger-tbody" class="divide-y divide-slate-800 text-sm">
+                        <!-- Populated via JS -->
                     </tbody>
                 </table>
             </div>
@@ -103,25 +85,23 @@
 
             const data = JSON.parse(localStorage.getItem('dashboardData')) || defaultData;
 
-            // Update Global Summaries
             document.getElementById('dash-invested').innerText = '$' + Number(data.globalInvested).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             document.getElementById('dash-debt').innerText = '$' + Number(data.debtOwed).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
-            // Render Assets Cards
             const assetContainer = document.getElementById('dash-assets-container');
             assetContainer.innerHTML = '';
             data.assets.forEach(asset => {
                 let isNegative = asset.pnl.startsWith('-');
                 assetContainer.innerHTML += `
-                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-2">
+                    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
                         <div class="flex justify-between items-start">
                             <div>
-                                <h4 class="text-xs font-bold text-white uppercase">${asset.name}</h4>
-                                <span class="text-[10px] text-slate-400">${asset.type}</span>
+                                <h4 class="text-sm font-bold text-white">${asset.name}</h4>
+                                <span class="text-xs text-slate-400">${asset.type}</span>
                             </div>
                             <span class="text-xs font-mono font-bold ${isNegative ? 'text-rose-400' : 'text-emerald-400'}">${asset.pnl}</span>
                         </div>
-                        <div class="text-[11px] font-mono text-slate-400 flex justify-between pt-2 border-t border-slate-800">
+                        <div class="text-xs font-mono text-slate-400 flex justify-between pt-2 border-t border-slate-800">
                             <span>Inv: $${Number(asset.investedAmount || 0).toLocaleString()}</span>
                             <span>Entry: ${asset.buyPrice}</span>
                             <span>Curr: ${asset.currentPrice}</span>
@@ -130,7 +110,6 @@
                 `;
             });
 
-            // Render Ledger Table
             const tbody = document.getElementById('ledger-tbody');
             tbody.innerHTML = '';
             data.ledger.forEach(row => {
@@ -156,14 +135,14 @@
                 }
 
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-800/30 transition">
-                        <td class="py-3.5 px-4 font-mono text-xs text-slate-300">${row.date}</td>
-                        <td class="py-3.5 px-4 font-medium text-white">${row.desc}</td>
-                        <td class="py-3.5 px-4">
+                    <tr class="hover:bg-slate-800/50 transition">
+                        <td class="py-3 px-4 font-mono text-xs text-slate-300">${row.date}</td>
+                        <td class="py-3 px-4 text-white">${row.desc}</td>
+                        <td class="py-3 px-4">
                             ${row.channel ? `<span class="text-xs px-2.5 py-1 rounded-md border font-mono ${channelClass}">${channelText}</span>` : '<span class="text-xs text-slate-500 italic">None</span>'}
                         </td>
-                        <td class="py-3.5 px-4 text-right font-mono ${amountClass}">${row.amount}</td>
-                        <td class="py-3.5 px-4 text-center">
+                        <td class="py-3 px-4 text-right font-mono ${amountClass}">${row.amount}</td>
+                        <td class="py-3 px-4 text-center">
                             <span class="text-xs font-mono px-2.5 py-1 rounded-md ${statusClass}">${row.status}</span>
                         </td>
                     </tr>

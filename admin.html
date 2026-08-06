@@ -106,13 +106,22 @@
             if (asset.investedAmount === undefined) asset.investedAmount = 5000;
         });
 
-        const availableDates = [
-            'June 1, 2026', 'June 11, 2026', 'June 20, 2026', 
-            'July 1, 2026', 'July 15, 2026', 'July 29, 2026', 
-            'August 1, 2026', 'August 5, 2026', 'August 10, 2026',
-            'September 1, 2026', 'October 1, 2026', 'November 1, 2026', 'December 1, 2026'
-        ];
+        // Automatically generate all calendar dates starting from June 11, 2026 through the end of 2027
+        function generateDateList() {
+            let dates = [];
+            let startDate = new Date('2026-06-11');
+            let endDate = new Date('2027-12-31');
+            
+            let curr = new Date(startDate);
+            while (curr <= endDate) {
+                let options = { month: 'long', day: 'numeric', year: 'numeric' };
+                dates.push(curr.toLocaleDateString('en-US', options));
+                curr.setDate(curr.getDate() + 1);
+            }
+            return dates;
+        }
 
+        const availableDates = generateDateList();
         const availableGateways = ['Wire', 'VISA', 'MasterCard', 'USDT'];
         const availableStatuses = ['Settled', 'Pending'];
 
@@ -157,7 +166,7 @@
                 `;
             });
 
-            // Render Ledger Editors with Dropdowns
+            // Render Ledger Editors with Complete Scrollable Date Dropdowns
             const ledgerContainer = document.getElementById('admin-ledger-container');
             ledgerContainer.innerHTML = '';
             currentData.ledger.forEach((item, idx) => {
@@ -168,7 +177,7 @@
                 ledgerContainer.innerHTML += `
                     <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                         <div>
-                            <label class="text-slate-400 block mb-1">Date</label>
+                            <label class="text-slate-400 block mb-1">Date (Starts June 11, 2026)</label>
                             <select id="ledger-date-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
                                 ${dateOptions}
                             </select>
@@ -235,7 +244,7 @@
         }
 
         function addLedgerRow() {
-            currentData.ledger.push({ date: 'August 5, 2026', desc: 'Capital Deposit Made', channel: 'Wire', amount: '$0.00', status: 'Pending' });
+            currentData.ledger.push({ date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'Wire', amount: '$0.00', status: 'Pending' });
             loadAdminForm();
         }
 

@@ -44,7 +44,7 @@
             <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
                 <div>
                     <h1 class="text-2xl font-bold tracking-tight text-white">Portfolio Dashboard</h1>
-                    <p id="mode-subtitle" class="text-slate-400 text-sm">Live market tracking with custom strike prices & PnL calculation</p>
+                    <p id="mode-subtitle" class="text-slate-400 text-sm">Live market tracking & asset allocation overview</p>
                 </div>
                 
                 <div class="flex flex-wrap gap-4 w-full lg:w-auto items-center">
@@ -66,7 +66,7 @@
                 </div>
             </header>
 
-            <!-- Asset Cards Grid -->
+            <!-- Asset Cards Grid (Clean, aesthetic cards without lot sizes) -->
             <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Dynamic Cards loaded via JS -->
             </div>
@@ -209,7 +209,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-800 pb-6 gap-4">
                     <div>
                         <div class="flex items-center space-x-2">
-                            <h2 class="text-xl font-bold tracking-tight text-white uppercase">Official Account Ledger & Ledger Statement</h2>
+                            <h2 class="text-xl font-bold tracking-tight text-white uppercase">Official Account Ledger & Statement</h2>
                             <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono px-2 py-0.5 rounded-full">VERIFIED AUDIT</span>
                         </div>
                         <p class="text-xs text-slate-400 mt-1">Comprehensive record of capital deposits, interest schedules, and debt settlements.</p>
@@ -282,15 +282,18 @@
             alert('Withdrawal request submitted successfully.');
         }
 
-        // Render dashboard values from shared storage
+        // Render dashboard values from shared storage (RESTORED original clean aesthetic & expanded asset set)
         function renderDashboard() {
             const defaultData = {
                 globalInvested: 39705.00,
                 debtOwed: 14706.00,
                 assets: [
-                    { name: 'XAU/USD Gold Spot', type: 'Forex / Precious Metals', size: '2.50 Lots', buyPrice: '2,332.50', currentPrice: '2,385.20', pnl: '+1,317.50' },
-                    { name: 'EUR/USD Major Pair', type: 'Forex Spot', size: '5.00 Lots', buyPrice: '1.0850', currentPrice: '1.0892', pnl: '+210.00' },
-                    { name: 'GBP/USD Cable', type: 'Forex Spot', size: '3.00 Lots', buyPrice: '1.2720', currentPrice: '1.2685', pnl: '-105.00' }
+                    { name: 'XAU/USD Gold Spot', type: 'Precious Metals / Spot', size: 'Active', buyPrice: '2,332.50', currentPrice: '2,385.20', pnl: '+1,317.50' },
+                    { name: 'EUR/USD Major Pair', type: 'Foreign Exchange', size: 'Active', buyPrice: '1.0850', currentPrice: '1.0892', pnl: '+210.00' },
+                    { name: 'GBP/USD Cable', type: 'Foreign Exchange', size: 'Active', buyPrice: '1.2720', currentPrice: '1.2685', pnl: '-105.00' },
+                    { name: 'USD/JPY Cross', type: 'Foreign Exchange', size: 'Active', buyPrice: '154.20', currentPrice: '155.10', pnl: '+450.00' },
+                    { name: 'BTC/USD Bitcoin', type: 'Cryptocurrency Asset', size: 'Active', buyPrice: '64,200.00', currentPrice: '67,500.00', pnl: '+3,300.00' },
+                    { name: 'US30 Dow Jones', type: 'Global Index', size: 'Active', buyPrice: '38,900.00', currentPrice: '39,250.00', pnl: '+875.00' }
                 ],
                 ledger: [
                     { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'Credit', channelClass: 'bg-blue-500/10 text-blue-400 border-blue-500/20', amount: '+$36,765.00', amountClass: 'text-emerald-400', status: 'Settled', statusClass: 'text-emerald-400 bg-emerald-500/10' },
@@ -304,37 +307,37 @@
             document.getElementById('global-invested-display').innerText = '$' + Number(data.globalInvested).toLocaleString('en-US', {minimumFractionDigits: 2});
             document.getElementById('debt-display').innerText = '$' + Number(data.debtOwed).toLocaleString('en-US', {minimumFractionDigits: 2});
 
-            // Calculate Total PnL
+            // Calculate Total PnL across all assets
             let totalPnlNum = data.assets.reduce((acc, asset) => acc + parseFloat(asset.pnl.replace(/[^0-9.-]+/g,"")), 0);
             let pnlEl = document.getElementById('total-pnl');
             pnlEl.innerText = (totalPnlNum >= 0 ? '+' : '') + '$' + totalPnlNum.toLocaleString('en-US', {minimumFractionDigits: 2});
             pnlEl.className = `text-xl font-bold tracking-tight ${totalPnlNum >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
 
-            // Render Asset Cards
+            // Render Asset Cards (Original clean layout without lot size clutter)
             const grid = document.getElementById('asset-grid');
             grid.innerHTML = '';
             data.assets.forEach(asset => {
                 let isPos = !asset.pnl.startsWith('-');
                 grid.innerHTML += `
-                    <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-xl space-y-4">
+                    <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-xl space-y-4 hover:border-slate-700 transition">
                         <div class="flex justify-between items-start">
                             <div>
                                 <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">${asset.type}</span>
-                                <h3 class="font-bold text-white text-base">${asset.name}</h3>
+                                <h3 class="font-bold text-white text-base mt-0.5">${asset.name}</h3>
                             </div>
-                            <span class="bg-slate-800 text-slate-300 text-xs font-mono px-2.5 py-1 rounded-lg">${asset.size}</span>
+                            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">Active</span>
                         </div>
                         <div class="grid grid-cols-2 gap-2 bg-slate-900/50 p-3 rounded-xl border border-slate-800/80 text-xs font-mono">
                             <div>
-                                <span class="text-slate-500 block">Entry Price</span>
+                                <span class="text-slate-500 block text-[10px] uppercase">Entry Price</span>
                                 <span class="text-slate-200 font-semibold">${asset.buyPrice}</span>
                             </div>
                             <div>
-                                <span class="text-slate-500 block">Current Price</span>
+                                <span class="text-slate-500 block text-[10px] uppercase">Current Price</span>
                                 <span class="text-slate-200 font-semibold">${asset.currentPrice}</span>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center pt-2 border-t border-slate-800">
+                        <div class="flex justify-between items-center pt-1 border-t border-slate-800">
                             <span class="text-xs text-slate-400 uppercase tracking-wider">Position PnL</span>
                             <span class="font-mono font-bold text-sm ${isPos ? 'text-emerald-400' : 'text-rose-400'}">${asset.pnl}</span>
                         </div>

@@ -365,4 +365,30 @@
         window.onload = renderDashboard;
     </script>
 </body>
+    // Inside renderDashboard() for the ledger:
+const tbody = document.getElementById('ledger-tbody');
+tbody.innerHTML = '';
+data.ledger.forEach(row => {
+    let isPending = row.status.toLowerCase() === 'pending';
+    let statusClass = isPending ? 'text-amber-400 bg-amber-500/10 border border-amber-500/20' : 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20';
+    let amountClass = isPending ? 'text-amber-400 font-semibold' : 'text-emerald-400 font-semibold';
+    
+    // Gateway Color Coding
+    let channelClass = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+    if (row.channel === 'VISA' || row.channel === 'MasterCard') {
+        channelClass = 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+    } else if (row.channel === 'USDT') {
+        channelClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+    }
+
+    tbody.innerHTML += `
+        <tr class="hover:bg-slate-800/30 transition">
+            <td class="py-3.5 px-4 font-mono text-xs text-slate-300">${row.date}</td>
+            <td class="py-3.5 px-4 font-medium text-white">${row.desc}</td>
+            <td class="py-3.5 px-4"><span class="text-xs px-2.5 py-1 rounded-md border font-mono ${channelClass}">${row.channel}</span></td>
+            <td class="py-3.5 px-4 text-right font-mono ${amountClass}">${row.amount}</td>
+            <td class="py-3.5 px-4 text-center"><span class="text-xs font-mono px-2.5 py-1 rounded-md ${statusClass}">${row.status}</span></td>
+        </tr>
+    `;
+});
 </html>

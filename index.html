@@ -66,7 +66,7 @@
                 </div>
             </header>
 
-            <!-- Asset Cards Grid (Clean, aesthetic cards without lot sizes) -->
+            <!-- Asset Cards Grid -->
             <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Dynamic Cards loaded via JS -->
             </div>
@@ -282,7 +282,6 @@
             alert('Withdrawal request submitted successfully.');
         }
 
-        // Render dashboard values from shared storage (RESTORED original clean aesthetic & expanded asset set)
         function renderDashboard() {
             const defaultData = {
                 globalInvested: 39705.00,
@@ -307,13 +306,11 @@
             document.getElementById('global-invested-display').innerText = '$' + Number(data.globalInvested).toLocaleString('en-US', {minimumFractionDigits: 2});
             document.getElementById('debt-display').innerText = '$' + Number(data.debtOwed).toLocaleString('en-US', {minimumFractionDigits: 2});
 
-            // Calculate Total PnL across all assets
             let totalPnlNum = data.assets.reduce((acc, asset) => acc + parseFloat(asset.pnl.replace(/[^0-9.-]+/g,"")), 0);
             let pnlEl = document.getElementById('total-pnl');
             pnlEl.innerText = (totalPnlNum >= 0 ? '+' : '') + '$' + totalPnlNum.toLocaleString('en-US', {minimumFractionDigits: 2});
             pnlEl.className = `text-xl font-bold tracking-tight ${totalPnlNum >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
 
-            // Render Asset Cards (Original clean layout without lot size clutter)
             const grid = document.getElementById('asset-grid');
             grid.innerHTML = '';
             data.assets.forEach(asset => {
@@ -345,7 +342,6 @@
                 `;
             });
 
-            // Render Ledger Table
             const tbody = document.getElementById('ledger-tbody');
             tbody.innerHTML = '';
             data.ledger.forEach(row => {
@@ -365,30 +361,4 @@
         window.onload = renderDashboard;
     </script>
 </body>
-    // Inside renderDashboard() for the ledger:
-const tbody = document.getElementById('ledger-tbody');
-tbody.innerHTML = '';
-data.ledger.forEach(row => {
-    let isPending = row.status.toLowerCase() === 'pending';
-    let statusClass = isPending ? 'text-amber-400 bg-amber-500/10 border border-amber-500/20' : 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20';
-    let amountClass = isPending ? 'text-amber-400 font-semibold' : 'text-emerald-400 font-semibold';
-    
-    // Gateway Color Coding
-    let channelClass = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
-    if (row.channel === 'VISA' || row.channel === 'MasterCard') {
-        channelClass = 'bg-purple-500/10 text-purple-400 border-purple-500/20';
-    } else if (row.channel === 'USDT') {
-        channelClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-    }
-
-    tbody.innerHTML += `
-        <tr class="hover:bg-slate-800/30 transition">
-            <td class="py-3.5 px-4 font-mono text-xs text-slate-300">${row.date}</td>
-            <td class="py-3.5 px-4 font-medium text-white">${row.desc}</td>
-            <td class="py-3.5 px-4"><span class="text-xs px-2.5 py-1 rounded-md border font-mono ${channelClass}">${row.channel}</span></td>
-            <td class="py-3.5 px-4 text-right font-mono ${amountClass}">${row.amount}</td>
-            <td class="py-3.5 px-4 text-center"><span class="text-xs font-mono px-2.5 py-1 rounded-md ${statusClass}">${row.status}</span></td>
-        </tr>
-    `;
-});
 </html>

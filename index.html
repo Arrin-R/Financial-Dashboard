@@ -1,75 +1,177 @@
-<!-- Account History / Ledger Section -->
-<div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-4">
-    <div class="flex justify-between items-center">
-        <h2 class="text-sm font-mono text-blue-400 uppercase tracking-wider">Account History Ledger</h2>
-        <span class="text-xs text-slate-400">Live Transaction & Payment Records</span>
-    </div>
-
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="border-b border-slate-800 text-xs font-mono text-slate-400 uppercase">
-                    <th class="py-3 px-4">Date</th>
-                    <th class="py-3 px-4">Description</th>
-                    <th class="py-3 px-4">Payment Type</th>
-                    <th class="py-3 px-4 text-right">Amount</th>
-                    <th class="py-3 px-4 text-center">Status</th>
-                </tr>
-            </thead>
-            <tbody id="ledger-tbody" class="divide-y divide-slate-800/60 text-sm">
-                <!-- Dynamically populated via JavaScript -->
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<script>
-    // Load and render data from localStorage on dashboard load
-    document.addEventListener("DOMContentLoaded", () => {
-        const savedData = JSON.parse(localStorage.getItem('dashboardData'));
-        if (!savedData || !savedData.ledger) return;
-
-        const tbody = document.getElementById('ledger-tbody');
-        tbody.innerHTML = '';
-
-        savedData.ledger.forEach(row => {
-            let isPending = row.status.toLowerCase() === 'pending';
-            
-            // Status Styling (Orange for Pending, Green for Settled)
-            let statusClass = isPending 
-                ? 'text-amber-400 bg-amber-500/10 border border-amber-500/20' 
-                : 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20';
-            
-            // Amount Styling (Orange for Pending, Green for Settled)
-            let amountClass = isPending 
-                ? 'text-amber-400 font-semibold' 
-                : 'text-emerald-400 font-semibold';
-            
-            // Payment Type / Gateway Color Coding Matching Withdrawal Page
-            let channelClass = 'bg-slate-800 text-slate-300 border-slate-700';
-            let channelText = row.channel || '—';
-            
-            if (row.channel === 'Wire') {
-                channelClass = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
-            } else if (row.channel === 'VISA' || row.channel === 'MasterCard') {
-                channelClass = 'bg-purple-500/10 text-purple-400 border-purple-500/20';
-            } else if (row.channel === 'USDT') {
-                channelClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Financial Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0f172a',
+                        cardbg: '#1e293b',
+                        cardborder: '#334155',
+                    }
+                }
             }
+        }
+    </script>
+</head>
+<body class="bg-darkbg text-slate-100 min-h-screen p-4 md:p-8 font-sans">
+    <div class="max-w-5xl mx-auto space-y-6">
+        
+        <!-- Dashboard Header -->
+        <div class="flex justify-between items-center bg-cardbg border border-cardborder px-6 py-4 rounded-2xl shadow-xl">
+            <div>
+                <h1 class="text-xl font-bold text-white uppercase tracking-wider">Live Financial Dashboard</h1>
+                <p class="text-xs text-slate-400">Real-time overview of active positions, capital, and account history.</p>
+            </div>
+            <a href="admin.html" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-4 py-2 rounded-xl transition uppercase tracking-wider border border-slate-700">
+                Open Admin Control &rarr;
+            </a>
+        </div>
 
-            tbody.innerHTML += `
-                <tr class="hover:bg-slate-800/30 transition">
-                    <td class="py-3.5 px-4 font-mono text-xs text-slate-300">${row.date}</td>
-                    <td class="py-3.5 px-4 font-medium text-white">${row.desc}</td>
-                    <td class="py-3.5 px-4">
-                        ${row.channel ? `<span class="text-xs px-2.5 py-1 rounded-md border font-mono ${channelClass}">${channelText}</span>` : '<span class="text-xs text-slate-500 italic">None</span>'}
-                    </td>
-                    <td class="py-3.5 px-4 text-right font-mono ${amountClass}">${row.amount}</td>
-                    <td class="py-3.5 px-4 text-center">
-                        <span class="text-xs font-mono px-2.5 py-1 rounded-md ${statusClass}">${row.status}</span>
-                    </td>
-                </tr>
-            `;
-        });
-    });
-</script>
+        <!-- Global Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
+                <p class="text-xs font-mono text-slate-400 uppercase">Global Invested Amount</p>
+                <h3 id="dash-invested" class="text-2xl font-bold font-mono text-white mt-1">$0.00</h3>
+            </div>
+            <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
+                <p class="text-xs font-mono text-slate-400 uppercase">Debt Owed</p>
+                <h3 id="dash-debt" class="text-2xl font-bold font-mono text-rose-400 mt-1">$0.00</h3>
+            </div>
+        </div>
+
+        <!-- Active Assets Grid -->
+        <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl space-y-4">
+            <h2 class="text-sm font-mono text-blue-400 uppercase tracking-wider">Active Assets & Performance</h2>
+            <div id="dash-assets-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dynamically populated via JavaScript -->
+            </div>
+        </div>
+
+        <!-- Account History / Ledger Section -->
+        <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-sm font-mono text-blue-400 uppercase tracking-wider">Account History Ledger</h2>
+                <span class="text-xs text-slate-400">Live Transaction & Payment Records</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-xs font-mono text-slate-400 uppercase">
+                            <th class="py-3 px-4">Date</th>
+                            <th class="py-3 px-4">Description</th>
+                            <th class="py-3 px-4">Payment Type</th>
+                            <th class="py-3 px-4 text-right">Amount</th>
+                            <th class="py-3 px-4 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledger-tbody" class="divide-y divide-slate-800/60 text-sm">
+                        <!-- Dynamically populated via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function renderDashboard() {
+            const defaultData = {
+                globalInvested: 39705.00,
+                debtOwed: 14706.00,
+                assets: [
+                    { name: 'XAU/USD Gold Spot', type: 'Precious Metals / Spot', investedAmount: 10000, buyPrice: 2332.50, currentPrice: 2385.20, pnl: '+1,317.50' },
+                    { name: 'EUR/USD Major Pair', type: 'Foreign Exchange', investedAmount: 8000, buyPrice: 1.0850, currentPrice: 1.0892, pnl: '+309.68' },
+                    { name: 'GBP/USD Cable', type: 'Foreign Exchange', investedAmount: 6000, buyPrice: 1.2720, currentPrice: 1.2685, pnl: '-165.09' },
+                    { name: 'USD/JPY Cross', type: 'Foreign Exchange', investedAmount: 5000, buyPrice: 154.20, currentPrice: 155.10, pnl: '+291.83' },
+                    { name: 'BTC/USD Bitcoin', type: 'Cryptocurrency Asset', investedAmount: 6000, buyPrice: 64200.00, currentPrice: 67500.00, pnl: '+308.41' },
+                    { name: 'US30 Dow Jones', type: 'Global Index', investedAmount: 4705, buyPrice: 38900.00, currentPrice: 39250.00, pnl: '+423.52' }
+                ],
+                ledger: [
+                    { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'Wire', amount: '+$36,765.00', status: 'Settled' },
+                    { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'USDT', amount: '+$2,940.00', status: 'Settled' },
+                    { date: 'July 29, 2026', desc: 'Interest Payment Made', channel: 'VISA', amount: '$1,838.25', status: 'Pending' }
+                ]
+            };
+
+            const data = JSON.parse(localStorage.getItem('dashboardData')) || defaultData;
+
+            // Update Global Summaries
+            document.getElementById('dash-invested').innerText = '$' + Number(data.globalInvested).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('dash-debt').innerText = '$' + Number(data.debtOwed).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+            // Render Assets Cards
+            const assetContainer = document.getElementById('dash-assets-container');
+            assetContainer.innerHTML = '';
+            data.assets.forEach(asset => {
+                let isNegative = asset.pnl.startsWith('-');
+                assetContainer.innerHTML += `
+                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="text-xs font-bold text-white uppercase">${asset.name}</h4>
+                                <span class="text-[10px] text-slate-400">${asset.type}</span>
+                            </div>
+                            <span class="text-xs font-mono font-bold ${isNegative ? 'text-rose-400' : 'text-emerald-400'}">${asset.pnl}</span>
+                        </div>
+                        <div class="text-[11px] font-mono text-slate-400 flex justify-between pt-2 border-t border-slate-800">
+                            <span>Inv: $${Number(asset.investedAmount || 0).toLocaleString()}</span>
+                            <span>Entry: ${asset.buyPrice}</span>
+                            <span>Curr: ${asset.currentPrice}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Render Ledger Table
+            const tbody = document.getElementById('ledger-tbody');
+            tbody.innerHTML = '';
+            data.ledger.forEach(row => {
+                let isPending = row.status.toLowerCase() === 'pending';
+                
+                let statusClass = isPending 
+                    ? 'text-amber-400 bg-amber-500/10 border border-amber-500/20' 
+                    : 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20';
+                
+                let amountClass = isPending 
+                    ? 'text-amber-400 font-semibold' 
+                    : 'text-emerald-400 font-semibold';
+                
+                let channelClass = 'bg-slate-800 text-slate-300 border-slate-700';
+                let channelText = row.channel || '—';
+                
+                if (row.channel === 'Wire') {
+                    channelClass = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+                } else if (row.channel === 'VISA' || row.channel === 'MasterCard') {
+                    channelClass = 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+                } else if (row.channel === 'USDT') {
+                    channelClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+                }
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-800/30 transition">
+                        <td class="py-3.5 px-4 font-mono text-xs text-slate-300">${row.date}</td>
+                        <td class="py-3.5 px-4 font-medium text-white">${row.desc}</td>
+                        <td class="py-3.5 px-4">
+                            ${row.channel ? `<span class="text-xs px-2.5 py-1 rounded-md border font-mono ${channelClass}">${channelText}</span>` : '<span class="text-xs text-slate-500 italic">None</span>'}
+                        </td>
+                        <td class="py-3.5 px-4 text-right font-mono ${amountClass}">${row.amount}</td>
+                        <td class="py-3.5 px-4 text-center">
+                            <span class="text-xs font-mono px-2.5 py-1 rounded-md ${statusClass}">${row.status}</span>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.onload = renderDashboard;
+    </script>
+</body>
+</html>

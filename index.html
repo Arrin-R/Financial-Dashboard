@@ -3,153 +3,365 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Dashboard</title>
+    <title>Financial & Portfolio Dashboard</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0f172a',
+                        cardbg: '#1e293b',
+                        cardborder: '#334155',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-6">
-    <div class="max-w-6xl mx-auto space-y-6">
+<body class="bg-darkbg text-slate-100 min-h-screen p-4 md:p-8 font-sans">
+
+    <div class="max-w-7xl mx-auto space-y-6">
         
-        <!-- Header Section -->
-        <div class="flex justify-between items-center bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
-            <div>
-                <h1 class="text-2xl font-bold tracking-tight text-white">Trading Portfolio Dashboard</h1>
-                <p class="text-sm text-slate-400">Overview of active investments, balances, and account history.</p>
+        <!-- Navigation Menu -->
+        <nav id="app-nav" class="flex justify-between items-center bg-cardbg border border-cardborder px-6 py-3 rounded-2xl shadow-lg">
+            <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></span>
+                <span class="text-xs font-mono uppercase tracking-wider text-slate-300">Secure Terminal Active</span>
             </div>
-            <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-xl text-sm transition">
-                Admin Control &rarr;
-            </a>
-        </div>
+            <div class="flex space-x-2 md:space-x-4">
+                <button onclick="switchView('dashboard')" id="nav-dashboard-btn" class="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition">Dashboard</button>
+                <button onclick="switchView('withdraw')" id="nav-withdraw-btn" class="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Withdraw</button>
+                <button onclick="switchView('history')" id="nav-history-btn" class="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">Account History</button>
+            </div>
+        </nav>
 
-        <!-- Metric Cards Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
-                <p class="text-xs font-mono uppercase tracking-wider text-slate-400">Total Invested Capital</p>
-                <h2 id="dash-invested" class="text-3xl font-bold font-mono text-white mt-2">$0.00</h2>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
-                <p class="text-xs font-mono uppercase tracking-wider text-slate-400">Total Debt Owed</p>
-                <h2 id="dash-debt" class="text-3xl font-bold font-mono text-rose-400 mt-2">$0.00</h2>
-            </div>
-        </div>
+        <!-- DASHBOARD VIEW CONTAINER -->
+        <div id="view-dashboard" class="space-y-6">
+            <!-- Header & Portfolio Summary -->
+            <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight text-white">Portfolio Dashboard</h1>
+                    <p id="mode-subtitle" class="text-slate-400 text-sm">Live market tracking & asset allocation overview</p>
+                </div>
+                
+                <div class="flex flex-wrap gap-4 w-full lg:w-auto items-center">
+                    <!-- Total PnL Card -->
+                    <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
+                        <span class="text-xs text-slate-400 uppercase tracking-wider block">Total Portfolio PnL</span>
+                        <span id="total-pnl" class="text-xl font-bold tracking-tight">$0.00</span>
+                    </div>
+                    <!-- Global Invested Amount Card -->
+                    <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
+                        <span class="text-xs text-slate-400 uppercase tracking-wider block">Invested Amount</span>
+                        <span id="global-invested-display" class="text-xl font-bold text-sky-400 tracking-tight">$0.00</span>
+                    </div>
+                    <!-- Debt Owed Card -->
+                    <div class="bg-slate-900/60 border border-cardborder px-5 py-3 rounded-xl flex-1 lg:flex-none">
+                        <span class="text-xs text-slate-400 uppercase tracking-wider block">Debt Owed</span>
+                        <span id="debt-display" class="text-xl font-bold text-amber-400 tracking-tight">$0.00</span>
+                    </div>
+                </div>
+            </header>
 
-        <!-- Asset Portfolio Grid -->
-        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg space-y-4">
-            <h3 class="text-lg font-semibold text-white">Active Asset Positions</h3>
-            <div id="dash-assets-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Populated via JS -->
-            </div>
-        </div>
-
-        <!-- Account History / Ledger -->
-        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg space-y-4">
-            <h3 class="text-lg font-semibold text-white">Account History</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="border-b border-slate-800 text-xs font-mono text-slate-400 uppercase">
-                            <th class="py-3 px-4">Date</th>
-                            <th class="py-3 px-4">Description</th>
-                            <th class="py-3 px-4">Payment Type</th>
-                            <th class="py-3 px-4 text-right">Amount</th>
-                            <th class="py-3 px-4 text-center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ledger-tbody" class="divide-y divide-slate-800 text-sm">
-                        <!-- Populated via JS -->
-                    </tbody>
-                </table>
+            <!-- Asset Cards Grid (Clean, aesthetic cards without lot sizes) -->
+            <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic Cards loaded via JS -->
             </div>
         </div>
 
+        <!-- WITHDRAWAL VIEW CONTAINER -->
+        <div id="view-withdraw" class="space-y-6 hidden">
+            <div class="bg-cardbg border border-cardborder rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
+                <div class="border-b border-slate-800 pb-6 space-y-4">
+                    <h2 class="text-xl font-bold tracking-tight text-white uppercase">Fund Withdrawal Portal</h2>
+                    <p class="text-xs text-slate-400">Select your preferred payout channel and enter destination details to process a withdrawal.</p>
+                    
+                    <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-start space-x-3 text-amber-400">
+                        <svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        <span class="text-xs font-semibold uppercase tracking-wider leading-relaxed">
+                            Profit withdrawals can only be made once debt is cleared and investment cycle is complete
+                        </span>
+                    </div>
+                </div>
+
+                <form onsubmit="handleWithdrawal(event)" class="space-y-6 max-w-3xl">
+                    <div>
+                        <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Withdrawal Amount ($ USD)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 font-bold">$</span>
+                            <input type="number" id="withdraw-amount" step="any" placeholder="0.00" required
+                                class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-4 py-3 text-white text-lg font-mono focus:outline-none focus:border-blue-500">
+                        </div>
+                        <span class="text-[11px] text-slate-400 mt-1 block">Available balance calculated dynamically from portfolio assets.</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-3">Select Payout Method</label>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="withdraw_channel" value="bank" class="peer hidden" checked onchange="toggleWithdrawFields('bank')">
+                                <div class="bg-slate-900/60 border border-slate-800 peer-checked:border-blue-500 peer-checked:bg-blue-500/10 p-4 rounded-xl transition space-y-2 h-full flex flex-col justify-between">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-sm text-white">Bank Transfer</span>
+                                        <span class="bg-blue-500/10 text-blue-400 text-[10px] font-mono px-2 py-0.5 rounded border border-blue-500/20">SEPA / Wire</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400">Direct transfer to your personal bank account. 1-3 business days.</p>
+                                </div>
+                            </label>
+
+                            <label class="cursor-pointer">
+                                <input type="radio" name="withdraw_channel" value="card" class="peer hidden" onchange="toggleWithdrawFields('card')">
+                                <div class="bg-slate-900/60 border border-slate-800 peer-checked:border-blue-500 peer-checked:bg-blue-500/10 p-4 rounded-xl transition space-y-2 h-full flex flex-col justify-between">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-sm text-white">VISA / Mastercard</span>
+                                        <span class="bg-purple-500/10 text-purple-400 text-[10px] font-mono px-2 py-0.5 rounded border border-purple-500/20">Instant</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400">Withdraw directly back to your debit or credit card.</p>
+                                </div>
+                            </label>
+
+                            <label class="cursor-pointer">
+                                <input type="radio" name="withdraw_channel" value="crypto" class="peer hidden" onchange="toggleWithdrawFields('crypto')">
+                                <div class="bg-slate-900/60 border border-slate-800 peer-checked:border-blue-500 peer-checked:bg-blue-500/10 p-4 rounded-xl transition space-y-2 h-full flex flex-col justify-between">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-sm text-white">Crypto (USDT)</span>
+                                        <span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-mono px-2 py-0.5 rounded border border-emerald-500/20">TRC20 / ERC20</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400">Fast blockchain payout to your external wallet address.</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="fields-bank" class="space-y-4 bg-slate-900/40 border border-slate-800 p-5 rounded-xl">
+                        <h3 class="text-xs font-mono uppercase tracking-wider text-blue-400">Bank Account Details</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Account Holder Name</label>
+                                <input type="text" placeholder="Full legal name" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Bank Name</label>
+                                <input type="text" placeholder="Institution name" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs text-slate-400 mb-1">IBAN / Account Number</label>
+                                <input type="text" placeholder="Enter full account number or IBAN" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs text-slate-400 mb-1">BIC / SWIFT Code</label>
+                                <input type="text" placeholder="Bank SWIFT/BIC identifier" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="fields-card" class="space-y-4 bg-slate-900/40 border border-slate-800 p-5 rounded-xl hidden">
+                        <h3 class="text-xs font-mono uppercase tracking-wider text-purple-400">Card Payout Details</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="md:col-span-2">
+                                <label class="block text-xs text-slate-400 mb-1">Card Number</label>
+                                <input type="text" placeholder="4111 2222 3333 4444" maxlength="19" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Expiry Date</label>
+                                <input type="text" placeholder="MM/YY" maxlength="5" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">CVV / Security Code</label>
+                                <input type="password" placeholder="123" maxlength="4" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="fields-crypto" class="space-y-4 bg-slate-900/40 border border-slate-800 p-5 rounded-xl hidden">
+                        <h3 class="text-xs font-mono uppercase tracking-wider text-emerald-400">Crypto Wallet Details</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Network Protocol</label>
+                                <select class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                                    <option>USDT - TRC20 (Tron Network)</option>
+                                    <option>USDT - ERC20 (Ethereum Network)</option>
+                                    <option>USDT - BEP20 (Binance Smart Chain)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Destination Wallet Address</label>
+                                <input type="text" placeholder="Paste your USDT wallet address here" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-xl transition shadow-lg text-sm uppercase tracking-wider cursor-pointer">
+                        Submit Withdrawal Request
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ACCOUNT HISTORY VIEW CONTAINER -->
+        <div id="view-history" class="space-y-6 hidden">
+            <div class="bg-cardbg border border-cardborder rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-800 pb-6 gap-4">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h2 class="text-xl font-bold tracking-tight text-white uppercase">Official Account Ledger & Statement</h2>
+                            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono px-2 py-0.5 rounded-full">VERIFIED AUDIT</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">Comprehensive record of capital deposits, interest schedules, and debt settlements.</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[11px] font-mono text-slate-400 block">STATEMENT GENERATION DATE</span>
+                        <span class="text-sm font-semibold text-slate-200">August 5, 2026</span>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-[11px] font-mono uppercase tracking-wider text-slate-400">
+                                <th class="py-3 px-4">Timestamp / Date</th>
+                                <th class="py-3 px-4">Transaction / Event Description</th>
+                                <th class="py-3 px-4">Channel / Gateway</th>
+                                <th class="py-3 px-4 text-right">Amount</th>
+                                <th class="py-3 px-4 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledger-tbody" class="divide-y divide-slate-800/60 text-sm">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- Dashboard Runtime Script -->
     <script>
+        function switchView(viewName) {
+            document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById('view-withdraw').classList.add('hidden');
+            document.getElementById('view-history').classList.add('hidden');
+
+            document.getElementById('nav-dashboard-btn').className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition";
+            document.getElementById('nav-withdraw-btn').className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition";
+            document.getElementById('nav-history-btn').className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition";
+
+            if (viewName === 'dashboard') {
+                document.getElementById('view-dashboard').classList.remove('hidden');
+                document.getElementById('nav-dashboard-btn').className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition";
+            } else if (viewName === 'withdraw') {
+                document.getElementById('view-withdraw').classList.remove('hidden');
+                document.getElementById('nav-withdraw-btn').className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition";
+            } else if (viewName === 'history') {
+                document.getElementById('view-history').classList.remove('hidden');
+                document.getElementById('nav-history-btn').className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition";
+            }
+        }
+
+        function toggleWithdrawFields(channel) {
+            document.getElementById('fields-bank').classList.add('hidden');
+            document.getElementById('fields-card').classList.add('hidden');
+            document.getElementById('fields-crypto').classList.add('hidden');
+
+            if (channel === 'bank') {
+                document.getElementById('fields-bank').classList.remove('hidden');
+            } else if (channel === 'card') {
+                document.getElementById('fields-card').classList.remove('hidden');
+            } else if (channel === 'crypto') {
+                document.getElementById('fields-crypto').classList.remove('hidden');
+            }
+        }
+
+        function handleWithdrawal(event) {
+            event.preventDefault();
+            alert('Withdrawal request submitted successfully.');
+        }
+
+        // Render dashboard values from shared storage (RESTORED original clean aesthetic & expanded asset set)
         function renderDashboard() {
             const defaultData = {
                 globalInvested: 39705.00,
                 debtOwed: 14706.00,
                 assets: [
-                    { name: 'XAU/USD Gold Spot', type: 'Precious Metals / Spot', investedAmount: 10000, buyPrice: 2332.50, currentPrice: 2385.20, pnl: '+1,317.50' },
-                    { name: 'EUR/USD Major Pair', type: 'Foreign Exchange', investedAmount: 8000, buyPrice: 1.0850, currentPrice: 1.0892, pnl: '+309.68' },
-                    { name: 'GBP/USD Cable', type: 'Foreign Exchange', investedAmount: 6000, buyPrice: 1.2720, currentPrice: 1.2685, pnl: '-165.09' },
-                    { name: 'USD/JPY Cross', type: 'Foreign Exchange', investedAmount: 5000, buyPrice: 154.20, currentPrice: 155.10, pnl: '+291.83' },
-                    { name: 'BTC/USD Bitcoin', type: 'Cryptocurrency Asset', investedAmount: 6000, buyPrice: 64200.00, currentPrice: 67500.00, pnl: '+308.41' },
-                    { name: 'US30 Dow Jones', type: 'Global Index', investedAmount: 4705, buyPrice: 38900.00, currentPrice: 39250.00, pnl: '+423.52' }
+                    { name: 'XAU/USD Gold Spot', type: 'Precious Metals / Spot', size: 'Active', buyPrice: '2,332.50', currentPrice: '2,385.20', pnl: '+1,317.50' },
+                    { name: 'EUR/USD Major Pair', type: 'Foreign Exchange', size: 'Active', buyPrice: '1.0850', currentPrice: '1.0892', pnl: '+210.00' },
+                    { name: 'GBP/USD Cable', type: 'Foreign Exchange', size: 'Active', buyPrice: '1.2720', currentPrice: '1.2685', pnl: '-105.00' },
+                    { name: 'USD/JPY Cross', type: 'Foreign Exchange', size: 'Active', buyPrice: '154.20', currentPrice: '155.10', pnl: '+450.00' },
+                    { name: 'BTC/USD Bitcoin', type: 'Cryptocurrency Asset', size: 'Active', buyPrice: '64,200.00', currentPrice: '67,500.00', pnl: '+3,300.00' },
+                    { name: 'US30 Dow Jones', type: 'Global Index', size: 'Active', buyPrice: '38,900.00', currentPrice: '39,250.00', pnl: '+875.00' }
                 ],
                 ledger: [
-                    { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'Wire', amount: '+$36,765.00', status: 'Settled' },
-                    { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'USDT', amount: '+$2,940.00', status: 'Settled' },
-                    { date: 'July 29, 2026', desc: 'Interest Payment Made', channel: 'VISA', amount: '$1,838.25', status: 'Pending' }
+                    { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'Credit', channelClass: 'bg-blue-500/10 text-blue-400 border-blue-500/20', amount: '+$36,765.00', amountClass: 'text-emerald-400', status: 'Settled', statusClass: 'text-emerald-400 bg-emerald-500/10' },
+                    { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'USDT', channelClass: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', amount: '+$2,940.00', amountClass: 'text-emerald-400', status: 'Settled', statusClass: 'text-emerald-400 bg-emerald-500/10' },
+                    { date: 'July 29, 2026', desc: 'Interest Payment Made', channel: 'VISA', channelClass: 'bg-purple-500/10 text-purple-400 border-purple-500/20', amount: '$1,838.25', amountClass: 'text-white font-semibold', status: 'Cleared', statusClass: 'text-emerald-400 bg-emerald-500/10' }
                 ]
             };
 
             const data = JSON.parse(localStorage.getItem('dashboardData')) || defaultData;
 
-            document.getElementById('dash-invested').innerText = '$' + Number(data.globalInvested).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.getElementById('dash-debt').innerText = '$' + Number(data.debtOwed).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('global-invested-display').innerText = '$' + Number(data.globalInvested).toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('debt-display').innerText = '$' + Number(data.debtOwed).toLocaleString('en-US', {minimumFractionDigits: 2});
 
-            const assetContainer = document.getElementById('dash-assets-container');
-            assetContainer.innerHTML = '';
+            // Calculate Total PnL across all assets
+            let totalPnlNum = data.assets.reduce((acc, asset) => acc + parseFloat(asset.pnl.replace(/[^0-9.-]+/g,"")), 0);
+            let pnlEl = document.getElementById('total-pnl');
+            pnlEl.innerText = (totalPnlNum >= 0 ? '+' : '') + '$' + totalPnlNum.toLocaleString('en-US', {minimumFractionDigits: 2});
+            pnlEl.className = `text-xl font-bold tracking-tight ${totalPnlNum >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+            // Render Asset Cards (Original clean layout without lot size clutter)
+            const grid = document.getElementById('asset-grid');
+            grid.innerHTML = '';
             data.assets.forEach(asset => {
-                let isNegative = asset.pnl.startsWith('-');
-                assetContainer.innerHTML += `
-                    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
+                let isPos = !asset.pnl.startsWith('-');
+                grid.innerHTML += `
+                    <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-xl space-y-4 hover:border-slate-700 transition">
                         <div class="flex justify-between items-start">
                             <div>
-                                <h4 class="text-sm font-bold text-white">${asset.name}</h4>
-                                <span class="text-xs text-slate-400">${asset.type}</span>
+                                <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">${asset.type}</span>
+                                <h3 class="font-bold text-white text-base mt-0.5">${asset.name}</h3>
                             </div>
-                            <span class="text-xs font-mono font-bold ${isNegative ? 'text-rose-400' : 'text-emerald-400'}">${asset.pnl}</span>
+                            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">Active</span>
                         </div>
-                        <div class="text-xs font-mono text-slate-400 flex justify-between pt-2 border-t border-slate-800">
-                            <span>Inv: $${Number(asset.investedAmount || 0).toLocaleString()}</span>
-                            <span>Entry: ${asset.buyPrice}</span>
-                            <span>Curr: ${asset.currentPrice}</span>
+                        <div class="grid grid-cols-2 gap-2 bg-slate-900/50 p-3 rounded-xl border border-slate-800/80 text-xs font-mono">
+                            <div>
+                                <span class="text-slate-500 block text-[10px] uppercase">Entry Price</span>
+                                <span class="text-slate-200 font-semibold">${asset.buyPrice}</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-500 block text-[10px] uppercase">Current Price</span>
+                                <span class="text-slate-200 font-semibold">${asset.currentPrice}</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center pt-1 border-t border-slate-800">
+                            <span class="text-xs text-slate-400 uppercase tracking-wider">Position PnL</span>
+                            <span class="font-mono font-bold text-sm ${isPos ? 'text-emerald-400' : 'text-rose-400'}">${asset.pnl}</span>
                         </div>
                     </div>
                 `;
             });
 
+            // Render Ledger Table
             const tbody = document.getElementById('ledger-tbody');
             tbody.innerHTML = '';
             data.ledger.forEach(row => {
-                let isPending = row.status.toLowerCase() === 'pending';
-                
-                let statusClass = isPending 
-                    ? 'text-amber-400 bg-amber-500/10 border border-amber-500/20' 
-                    : 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20';
-                
-                let amountClass = isPending 
-                    ? 'text-amber-400 font-semibold' 
-                    : 'text-emerald-400 font-semibold';
-                
-                let channelClass = 'bg-slate-800 text-slate-300 border-slate-700';
-                let channelText = row.channel || '—';
-                
-                if (row.channel === 'Wire') {
-                    channelClass = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
-                } else if (row.channel === 'VISA' || row.channel === 'MasterCard') {
-                    channelClass = 'bg-purple-500/10 text-purple-400 border-purple-500/20';
-                } else if (row.channel === 'USDT') {
-                    channelClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-                }
-
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-800/50 transition">
-                        <td class="py-3 px-4 font-mono text-xs text-slate-300">${row.date}</td>
-                        <td class="py-3 px-4 text-white">${row.desc}</td>
-                        <td class="py-3 px-4">
-                            ${row.channel ? `<span class="text-xs px-2.5 py-1 rounded-md border font-mono ${channelClass}">${channelText}</span>` : '<span class="text-xs text-slate-500 italic">None</span>'}
-                        </td>
-                        <td class="py-3 px-4 text-right font-mono ${amountClass}">${row.amount}</td>
-                        <td class="py-3 px-4 text-center">
-                            <span class="text-xs font-mono px-2.5 py-1 rounded-md ${statusClass}">${row.status}</span>
-                        </td>
+                    <tr class="hover:bg-slate-800/30 transition">
+                        <td class="py-3.5 px-4 font-mono text-xs text-slate-300">${row.date}</td>
+                        <td class="py-3.5 px-4 font-medium text-white">${row.desc}</td>
+                        <td class="py-3.5 px-4"><span class="bg-blue-500/15 text-blue-400 text-xs px-2 py-0.5 rounded border border-blue-500/20">${row.channel}</span></td>
+                        <td class="py-3.5 px-4 text-right font-semibold ${row.amountClass}">${row.amount}</td>
+                        <td class="py-3.5 px-4 text-center"><span class="text-xs font-mono px-2 py-0.5 rounded ${row.statusClass}">${row.status}</span></td>
                     </tr>
                 `;
             });
         }
 
+        window.addEventListener('storage', renderDashboard);
         window.onload = renderDashboard;
     </script>
 </body>

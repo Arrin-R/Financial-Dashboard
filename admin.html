@@ -94,20 +94,27 @@
                 { name: 'US30 Dow Jones', type: 'Global Index', investedAmount: 4705, buyPrice: 38900.00, currentPrice: 39250.00, pnl: '+423.52' }
             ],
             ledger: [
-                { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'Credit', channelClass: 'bg-blue-500/10 text-blue-400 border-blue-500/20', amount: '+$36,765.00', amountClass: 'text-emerald-400', status: 'Settled', statusClass: 'text-emerald-400 bg-emerald-500/10' },
-                { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'USDT', channelClass: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', amount: '+$2,940.00', amountClass: 'text-emerald-400', status: 'Settled', statusClass: 'text-emerald-400 bg-emerald-500/10' },
-                { date: 'July 29, 2026', desc: 'Interest Payment Made', channel: 'VISA', channelClass: 'bg-purple-500/10 text-purple-400 border-purple-500/20', amount: '$1,838.25', amountClass: 'text-white font-semibold', status: 'Cleared', statusClass: 'text-emerald-400 bg-emerald-500/10' }
+                { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'Wire', amount: '+$36,765.00', status: 'Settled' },
+                { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'USDT', amount: '+$2,940.00', status: 'Settled' },
+                { date: 'July 29, 2026', desc: 'Interest Payment Made', channel: 'VISA', amount: '$1,838.25', status: 'Pending' }
             ]
         };
 
         let currentData = JSON.parse(localStorage.getItem('dashboardData')) || defaultData;
 
-        // Ensure legacy assets without investedAmount have a default fallback
         currentData.assets.forEach(asset => {
-            if (asset.investedAmount === undefined) {
-                asset.investedAmount = 5000;
-            }
+            if (asset.investedAmount === undefined) asset.investedAmount = 5000;
         });
+
+        const availableDates = [
+            'June 1, 2026', 'June 11, 2026', 'June 20, 2026', 
+            'July 1, 2026', 'July 15, 2026', 'July 29, 2026', 
+            'August 1, 2026', 'August 5, 2026', 'August 10, 2026',
+            'September 1, 2026', 'October 1, 2026', 'November 1, 2026', 'December 1, 2026'
+        ];
+
+        const availableGateways = ['Wire', 'VISA', 'MasterCard', 'USDT'];
+        const availableStatuses = ['Settled', 'Pending'];
 
         function loadAdminForm() {
             document.getElementById('admin-invested').value = currentData.globalInvested;
@@ -150,34 +157,44 @@
                 `;
             });
 
-            // Render Ledger Editors
+            // Render Ledger Editors with Dropdowns
             const ledgerContainer = document.getElementById('admin-ledger-container');
             ledgerContainer.innerHTML = '';
             currentData.ledger.forEach((item, idx) => {
+                let dateOptions = availableDates.map(d => `<option value="${d}" ${item.date === d ? 'selected' : ''}>${d}</option>`).join('');
+                let gatewayOptions = availableGateways.map(g => `<option value="${g}" ${item.channel === g ? 'selected' : ''}>${g}</option>`).join('');
+                let statusOptions = availableStatuses.map(s => `<option value="${s}" ${item.status === s ? 'selected' : ''}>${s}</option>`).join('');
+
                 ledgerContainer.innerHTML += `
                     <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                         <div>
                             <label class="text-slate-400 block mb-1">Date</label>
-                            <input type="text" value="${item.date}" id="ledger-date-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white">
+                            <select id="ledger-date-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                                ${dateOptions}
+                            </select>
                         </div>
                         <div>
                             <label class="text-slate-400 block mb-1">Description</label>
-                            <input type="text" value="${item.desc}" id="ledger-desc-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white">
+                            <input type="text" value="${item.desc}" id="ledger-desc-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
                         </div>
                         <div>
-                            <label class="text-slate-400 block mb-1">Channel / Method</label>
-                            <input type="text" value="${item.channel}" id="ledger-chan-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white">
+                            <label class="text-slate-400 block mb-1">Gateway</label>
+                            <select id="ledger-chan-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-semibold">
+                                ${gatewayOptions}
+                            </select>
                         </div>
                         <div>
                             <label class="text-slate-400 block mb-1">Amount (e.g. +$1,000.00)</label>
-                            <input type="text" value="${item.amount}" id="ledger-amt-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white font-mono">
+                            <input type="text" value="${item.amount}" id="ledger-amt-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono">
                         </div>
                         <div>
                             <label class="text-slate-400 block mb-1">Status</label>
-                            <input type="text" value="${item.status}" id="ledger-stat-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-white">
+                            <select id="ledger-stat-${idx}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                                ${statusOptions}
+                            </select>
                         </div>
                         <div class="flex items-end">
-                            <button onclick="removeLedger(${idx})" class="w-full bg-rose-600/20 text-rose-400 border border-rose-500/30 hover:bg-rose-600/30 py-1.5 rounded-lg transition font-semibold">Delete Record</button>
+                            <button onclick="removeLedger(${idx})" class="w-full bg-rose-600/20 text-rose-400 border border-rose-500/30 hover:bg-rose-600/30 py-2 rounded-lg transition font-semibold">Delete Record</button>
                         </div>
                     </div>
                 `;
@@ -218,7 +235,7 @@
         }
 
         function addLedgerRow() {
-            currentData.ledger.push({ date: 'August 5, 2026', desc: 'New Transaction', channel: 'Wire', channelClass: 'bg-blue-500/15 text-blue-400 border-blue-500/20', amount: '$0.00', amountClass: 'text-white font-semibold', status: 'Settled', statusClass: 'text-emerald-400 bg-emerald-500/10' });
+            currentData.ledger.push({ date: 'August 5, 2026', desc: 'Capital Deposit Made', channel: 'Wire', amount: '$0.00', status: 'Pending' });
             loadAdminForm();
         }
 
@@ -231,7 +248,7 @@
             currentData.globalInvested = parseFloat(document.getElementById('admin-invested').value) || 0;
             currentData.debtOwed = parseFloat(document.getElementById('admin-debt').value) || 0;
 
-            // Collect Asset Updates & Calculated PnLs
+            // Collect Asset Updates
             currentData.assets.forEach((asset, idx) => {
                 asset.name = document.getElementById(`asset-name-${idx}`).value;
                 asset.type = document.getElementById(`asset-type-${idx}`).value;

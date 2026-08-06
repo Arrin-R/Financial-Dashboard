@@ -357,7 +357,8 @@
                 channelClass = 'bg-sky-500/15 text-sky-400 border-sky-500/20';
             }
 
-            data.ledger.unshift({
+            // Changed from unshift() to push() so new additions appear at the bottom of the list
+            data.ledger.push({
                 date: formattedDate,
                 desc: desc,
                 channel: displayChannel,

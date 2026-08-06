@@ -105,8 +105,6 @@
                                 <tr class="border-b border-slate-800 text-[11px] font-mono uppercase tracking-wider text-slate-400">
                                     <th class="py-3 px-3">Asset Name</th>
                                     <th class="py-3 px-3">Type</th>
-                                    <th class="py-3 px-3 text-right">Buy Price</th>
-                                    <th class="py-3 px-3 text-right">Current Price</th>
                                     <th class="py-3 px-3 text-right">P&L</th>
                                     <th class="py-3 px-3 text-center">Action</th>
                                 </tr>
@@ -261,18 +259,6 @@
                     <input type="text" id="asset-type" placeholder="e.g. Precious Metals / Spot" required
                         class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500">
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Buy Price</label>
-                        <input type="text" id="asset-buy" placeholder="2,332.50" required
-                            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">Current Price</label>
-                        <input type="text" id="asset-current" placeholder="2,385.20" required
-                            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
-                    </div>
-                </div>
                 <div>
                     <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1">P&L ($ or formatted string)</label>
                     <input type="text" id="asset-pnl" placeholder="+1,317.50" required
@@ -292,12 +278,12 @@
             globalInvested: 39705.00,
             debtOwed: 14706.00,
             assets: [
-                { name: 'XAU/USD Gold Spot', type: 'Precious Metals / Spot', size: 'Active', buyPrice: '2,332.50', currentPrice: '2,385.20', pnl: '+1,317.50' },
-                { name: 'EUR/USD Major Pair', type: 'Foreign Exchange', size: 'Active', buyPrice: '1.0850', currentPrice: '1.0892', pnl: '+210.00' },
-                { name: 'GBP/USD Cable', type: 'Foreign Exchange', size: 'Active', buyPrice: '1.2720', currentPrice: '1.2685', pnl: '-105.00' },
-                { name: 'USD/JPY Cross', type: 'Foreign Exchange', size: 'Active', buyPrice: '154.20', currentPrice: '155.10', pnl: '+450.00' },
-                { name: 'BTC/USD Bitcoin', type: 'Cryptocurrency Asset', size: 'Active', buyPrice: '64,200.00', currentPrice: '67,500.00', pnl: '+3,300.00' },
-                { name: 'US30 Dow Jones', type: 'Global Index', size: 'Active', buyPrice: '38,900.00', currentPrice: '39,250.00', pnl: '+875.00' }
+                { name: 'XAU/USD Gold Spot', type: 'Precious Metals / Spot', size: 'Active', pnl: '+1,317.50' },
+                { name: 'EUR/USD Major Pair', type: 'Foreign Exchange', size: 'Active', pnl: '+210.00' },
+                { name: 'GBP/USD Cable', type: 'Foreign Exchange', size: 'Active', pnl: '-105.00' },
+                { name: 'USD/JPY Cross', type: 'Foreign Exchange', size: 'Active', pnl: '+450.00' },
+                { name: 'BTC/USD Bitcoin', type: 'Cryptocurrency Asset', size: 'Active', pnl: '+3,300.00' },
+                { name: 'US30 Dow Jones', type: 'Global Index', size: 'Active', pnl: '+875.00' }
             ],
             ledger: [
                 { date: 'June 11, 2026', desc: 'Capital Deposit Made', channel: 'Bank Wire', channelClass: 'bg-sky-500/15 text-sky-400 border-sky-500/20', amount: '+$36,765.00', status: 'Settled' },
@@ -359,7 +345,7 @@
             const assetsTbody = document.getElementById('admin-assets-tbody');
             assetsTbody.innerHTML = '';
             if (data.assets.length === 0) {
-                assetsTbody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-slate-500">No portfolio assets found.</td></tr>`;
+                assetsTbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-500">No portfolio assets found.</td></tr>`;
             } else {
                 data.assets.forEach((asset, index) => {
                     let isNegative = asset.pnl.startsWith('-');
@@ -368,8 +354,6 @@
                         <tr class="hover:bg-slate-800/30 transition">
                             <td class="py-2.5 px-3 text-white font-bold">${asset.name}</td>
                             <td class="py-2.5 px-3 text-slate-400">${asset.type}</td>
-                            <td class="py-2.5 px-3 text-right text-slate-300">${asset.buyPrice}</td>
-                            <td class="py-2.5 px-3 text-right text-slate-300">${asset.currentPrice}</td>
                             <td class="py-2.5 px-3 text-right ${pnlClass} font-semibold">${asset.pnl}</td>
                             <td class="py-2.5 px-3 text-center space-x-2">
                                 <button onclick="editAsset(${index})" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 px-2.5 py-1 rounded transition cursor-pointer text-[10px] uppercase font-bold">Edit</button>
@@ -413,8 +397,6 @@
             document.getElementById('asset-edit-index').value = '-1';
             document.getElementById('asset-name').value = '';
             document.getElementById('asset-type').value = '';
-            document.getElementById('asset-buy').value = '';
-            document.getElementById('asset-current').value = '';
             document.getElementById('asset-pnl').value = '';
             document.getElementById('asset-modal').classList.remove('hidden');
             document.getElementById('asset-modal').classList.add('flex');
@@ -432,8 +414,6 @@
             document.getElementById('asset-edit-index').value = index;
             document.getElementById('asset-name').value = asset.name;
             document.getElementById('asset-type').value = asset.type;
-            document.getElementById('asset-buy').value = asset.buyPrice;
-            document.getElementById('asset-current').value = asset.currentPrice;
             document.getElementById('asset-pnl').value = asset.pnl;
             document.getElementById('asset-modal').classList.remove('hidden');
             document.getElementById('asset-modal').classList.add('flex');
@@ -448,8 +428,6 @@
                 name: document.getElementById('asset-name').value,
                 type: document.getElementById('asset-type').value,
                 size: 'Active',
-                buyPrice: document.getElementById('asset-buy').value,
-                currentPrice: document.getElementById('asset-current').value,
                 pnl: document.getElementById('asset-pnl').value
             };
 
@@ -493,7 +471,7 @@
             event.preventDefault();
             let data = getAppData();
 
-            let rawDate = document.getElementById('ledger-date').value; // Format: YYYY-MM-DD
+            let rawDate = document.getElementById('ledger-date').value;
             let formattedDate = rawDate;
             if (rawDate) {
                 const dateObj = new Date(rawDate + 'T00:00:00');
@@ -501,61 +479,48 @@
             }
 
             let channel = document.getElementById('ledger-channel').value;
-            
+            let channelClass = 'bg-slate-500/15 text-slate-400 border-slate-500/20';
+            if (channel === 'Bank Wire') channelClass = 'bg-sky-500/15 text-sky-400 border-sky-500/20';
+            if (channel === 'MasterCard') channelClass = 'bg-amber-500/15 text-amber-400 border-amber-500/20';
+            if (channel === 'VISA') channelClass = 'bg-purple-500/15 text-purple-400 border-purple-500/20';
+            if (channel === 'USDT') channelClass = 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20';
+
             let descSelect = document.getElementById('ledger-desc-select').value;
             let desc = descSelect === 'custom' ? document.getElementById('ledger-desc-custom').value : descSelect;
 
             let amount = document.getElementById('ledger-amount').value;
             let status = document.getElementById('ledger-status').value;
 
-            // Handle badge styling based on channel selection
-            let channelClass = 'bg-slate-500/15 text-slate-400 border-slate-500/20';
-            let displayChannel = channel ? channel : '—';
-
-            if (channel === 'MasterCard') {
-                channelClass = 'bg-amber-500/15 text-amber-400 border-amber-500/20';
-            } else if (channel === 'VISA') {
-                channelClass = 'bg-purple-500/15 text-purple-400 border-purple-500/20';
-            } else if (channel === 'USDT') {
-                channelClass = 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20';
-            } else if (channel === 'Bank Wire') {
-                channelClass = 'bg-sky-500/15 text-sky-400 border-sky-500/20';
-            }
-
-            data.ledger.push({
+            data.ledger.unshift({
                 date: formattedDate,
-                desc: desc,
-                channel: displayChannel,
+                desc: desc || 'Custom Ledger Entry',
+                channel: channel || 'None',
                 channelClass: channelClass,
                 amount: amount,
                 status: status
             });
 
             saveAppData(data);
-            alert('Custom transaction successfully pushed to user ledger.');
+            alert('Transaction successfully pushed to user ledger timeline.');
             event.target.reset();
-            
-            // Re-initialize date picker to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('ledger-date').value = today;
-            
+            document.getElementById('ledger-date').value = new Date().toISOString().split('T')[0];
             toggleCustomDescField();
         }
 
         function loadDefaultSeedData() {
-            if (confirm('Reset all user data back to default settings?')) {
-                localStorage.setItem('dashboardData', JSON.stringify(defaultData));
+            if (confirm('Are you sure you want to reset all data back to the default seed values?')) {
+                localStorage.removeItem('dashboardData');
                 initAdmin();
-                alert('Data successfully reset to defaults.');
+                alert('Dashboard reset to default seed data.');
             }
         }
 
         function clearEntireLedger() {
-            if (confirm('Are you sure you want to clear all history log entries?')) {
+            if (confirm('Warning: This will delete all transaction history records. Proceed?')) {
                 let data = getAppData();
                 data.ledger = [];
                 saveAppData(data);
-                alert('Ledger history cleared.');
+                alert('All history records wiped.');
             }
         }
 

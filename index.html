@@ -42,9 +42,7 @@
             <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl">
                 <div>
                     <h1 class="text-2xl font-bold tracking-tight text-white">Portfolio Dashboard</h1>
-                    <p id="mode-subtitle" class="text-slate-400 text-sm">
-                        Live market tracking &amp; asset allocation overview — Statement Generated: <span id="realtime-date" class="font-mono text-slate-300"></span>
-                    </p>
+                    <p id="mode-subtitle" class="text-slate-400 text-sm">Live market tracking &amp; asset allocation overview</p>
                 </div>
                 
                 <div class="flex flex-wrap gap-4 w-full lg:w-auto items-center">
@@ -68,145 +66,14 @@
 
             <!-- Asset Cards Grid -->
             <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- XAU/USD Gold Spot -->
-                <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-xl space-y-4 hover:border-slate-700 transition">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Precious Metals / Spot</span>
-                            <h3 class="font-bold text-white text-base mt-0.5">XAU/USD Gold Spot</h3>
+                    <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-xl space-y-4 hover:border-slate-700 transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Precious Metals / Spot</span>
+                                <h3 class="font-bold text-white text-base mt-0.5">XAU/USD Gold Spot</h3>
+                            </div>
+                            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">Active</span>
                         </div>
-                        <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">Active</span>
-                    </div>
-                    <div class="flex justify-between items-center pt-1 border-t border-slate-800">
-                        <span class="text-xs text-slate-400 uppercase tracking-wider">Position PnL</span>
-                        <span class="font-mono font-bold text-sm text-emerald-400">+$2,150.00</span>
-                    </div>
-                </div>
-
-                <!-- Bitcoin Holdings -->
-                <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-xl space-y-4 hover:border-slate-700 transition">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Cryptocurrency</span>
-                            <h3 class="font-bold text-white text-base mt-0.5">Bitcoin (BTC)</h3>
-                        </div>
-                        <span class="bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[10px] font-mono px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">Staked</span>
-                    </div>
-                    <div class="flex justify-between items-center pt-1 border-t border-slate-800">
-                        <span class="text-xs text-slate-400 uppercase tracking-wider">Position PnL</span>
-                        <span class="font-mono font-bold text-sm text-emerald-400">+$1,845.00</span>
-                    </div>
-                </div>
-
-                <!-- Forex Majors -->
-                <div class="bg-cardbg border border-cardborder p-5 rounded-2xl shadow-xl space-y-4 hover:border-slate-700 transition">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Foreign Exchange</span>
-                            <h3 class="font-bold text-white text-base mt-0.5">EUR/USD Forex</h3>
-                        </div>
-                        <span class="bg-sky-500/10 text-sky-400 border border-sky-500/20 text-[10px] font-mono px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">Hedged</span>
-                    </div>
-                    <div class="flex justify-between items-center pt-1 border-t border-slate-800">
-                        <span class="text-xs text-slate-400 uppercase tracking-wider">Position PnL</span>
-                        <span class="font-mono font-bold text-sm text-emerald-400">+$1,342.50</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- WITHDRAW VIEW CONTAINER -->
-        <div id="view-withdraw" class="hidden space-y-6">
-            <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl space-y-6">
-                <h2 class="text-xl font-bold text-white">Withdrawal Portal</h2>
-                <p class="text-slate-400 text-sm">Select destination account and specify payout amount below.</p>
-                <div class="space-y-4 max-w-md">
-                    <div>
-                        <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Destination Address / IBAN</label>
-                        <input type="text" placeholder="Enter payout address..." class="w-full bg-slate-900 border border-cardborder rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Amount (USD)</label>
-                        <input type="number" placeholder="0.00" class="w-full bg-slate-900 border border-cardborder rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
-                    </div>
-                    <button class="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs uppercase tracking-wider px-6 py-2.5 rounded-lg transition">Submit Withdrawal</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ACCOUNT HISTORY VIEW CONTAINER -->
-        <div id="view-history" class="hidden space-y-6">
-            <div class="bg-cardbg border border-cardborder p-6 rounded-2xl shadow-xl space-y-6">
-                <h2 class="text-xl font-bold text-white">Account History &amp; Settlement Ledger</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-slate-300">
-                        <thead class="bg-slate-900/60 text-xs uppercase tracking-wider text-slate-400 border-b border-cardborder">
-                            <tr>
-                                <th class="p-3">Transaction ID</th>
-                                <th class="p-3">Asset / Type</th>
-                                <th class="p-3">Amount</th>
-                                <th class="p-3">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-800">
-                            <tr>
-                                <td class="p-3 font-mono text-xs">TXN-88492</td>
-                                <td class="p-3">XAU/USD Execution</td>
-                                <td class="p-3 font-mono text-emerald-400">+$2,150.00</td>
-                                <td class="p-3"><span class="text-emerald-400 text-xs font-semibold">Completed</span></td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-mono text-xs">TXN-88491</td>
-                                <td class="p-3">Bitcoin Stake Cycle</td>
-                                <td class="p-3 font-mono text-emerald-400">+$1,845.00</td>
-                                <td class="p-3"><span class="text-emerald-400 text-xs font-semibold">Completed</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Script to update date/time in real time & handle view switching -->
-    <script>
-        function updateRealtimeDate() {
-            const now = new Date();
-            const options = { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric', 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit', 
-                hour12: true 
-            };
-            const dateElem = document.getElementById('realtime-date');
-            if (dateElem) {
-                dateElem.textContent = now.toLocaleDateString('en-US', options);
-            }
-        }
-
-        // Run immediately on load and update every second
-        updateRealtimeDate();
-        setInterval(updateRealtimeDate, 1000);
-
-        function switchView(viewName) {
-            // Hide all views
-            document.getElementById('view-dashboard').classList.add('hidden');
-            document.getElementById('view-withdraw').classList.add('hidden');
-            document.getElementById('view-history').classList.add('hidden');
-
-            // Reset nav buttons styling
-            document.getElementById('nav-dashboard-btn').className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition";
-            document.getElementById('nav-withdraw-btn').className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition";
-            document.getElementById('nav-history-btn').className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition";
-
-            // Show selected view and activate button style
-            document.getElementById('view-' + viewName).classList.remove('hidden');
-            document.getElementById('nav-' + viewName + '-btn').className = "text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-blue-600 text-white transition";
-        }
-    </script>
-</body>
-</html>
+                        <div class="flex justify-between items-center pt-1 border-t border-slate-800">
+                            <span class="text-xs text-slate-400 uppercase tracking-wider">Position PnL</span>
+                            <span class="font-mono font-bold text-sm text
